@@ -1,20 +1,21 @@
-import { PortableTextBlock, ImageAsset, Reference, Slug, FileAsset } from 'sanity'
+import { PortableTextBlock, ImageAsset,  Slug, FileAsset } from 'sanity'
 
 export interface HomePage {
   _type: 'homepage'
   title: string
   intro: Array<PortableTextBlock | ImageAsset>
-  menuItems: Array<{
+  menuItems?: Array<{
     _type: 'object'
     label: string
-    link: Reference
+    link: string
   }>
 }
 
 export interface Page {
   _type: 'page'
   title: string
-  content: Array<PortableTextBlock | ImageAsset>
+  _id: number
+  content: Array<PortableTextBlock | ImageAsset | FileAsset>
   slug: Slug
   publishedAt: string
   author: string
@@ -39,27 +40,33 @@ export interface CreationSection {
   _type: 'creationSection'
   title: string
   content: Array<PortableTextBlock | ImageAsset>
+  
 }
 
-export interface MyCreations {
+export interface MyCreationsType {
   _type: 'myCreations'
   title: string
-  sections: Reference[] // Reference to CreationSection
+  _id: string
+  sections: CreationSection[] // Reference to CreationSection
+  
 }
 
 export interface MyStory {
   _type: 'myStory'
   title: string
   content: Array<PortableTextBlock | ImageAsset>
-  photo: ImageAsset
+  photoUrl: string
 }
 
 export interface VideoPage {
   _type: 'videoPage'
   videos: Array<{
     _type: 'object'
-    videoFile: FileAsset
+    videoType: 'youtube' | 'file'
+    youtubeVideoId?: string
+    videoFile?: FileAsset
     caption: string
+    videoUrl?: string
   }>
 }
 
