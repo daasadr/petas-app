@@ -20,7 +20,7 @@ export default defineType({
       ]
     }),
     defineField({
-      name: 'photo',
+      name: 'imageUrl',
       title: 'Fotografie',
       type: 'image'
     })

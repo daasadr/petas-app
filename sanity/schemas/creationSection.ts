@@ -4,6 +4,7 @@ export default defineType({
   name: 'creationSection',
   title: 'Sekce tvorby',
   type: 'document', // Změnili jsme typ na 'document'
+  
   fields: [
     defineField({
       name: 'title',
@@ -18,6 +19,19 @@ export default defineType({
         {type: 'block'},
         {type: 'image'}
       ]
-    })
+    }),
+    defineField({
+  name: 'image',
+  type: 'image',
+  fields: [
+    {
+      name: 'alt',
+      type: 'string',
+      title: 'Alternative text'
+    }
+  ]
+})
+
+
   ]
 })

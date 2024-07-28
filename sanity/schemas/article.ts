@@ -1,18 +1,27 @@
 import { defineType, defineField } from 'sanity'
 
 export default defineType({
-  name: 'page',
-  title: 'Stránka',
+  name: 'article',
+  title: 'Článek',
   type: 'document',
   fields: [
     defineField({
       name: 'title',
-      title: 'Název stránky',
+      title: 'Název článku',
       type: 'string'
     }),
     defineField({
+      name: 'slug',
+      title: 'Slug',
+      type: 'slug',
+      options: {
+        source: 'title',
+        maxLength: 96,
+      },
+    }),
+    defineField({
       name: 'content',
-      title: 'Obsah stránky',
+      title: 'Obsah článku',
       type: 'array',
       of: [
         { type: 'block' },
@@ -20,9 +29,10 @@ export default defineType({
       ]
     }),
     defineField({
-      name: 'slug',
-      title: 'URL Slug',
-      type: 'slug'
+      name: 'excerpt',
+      title: 'Krátký popis',
+      type: 'text',
+      description: 'Krátký popis článku pro náhled'
     }),
     defineField({
       name: 'publishedAt',
@@ -43,7 +53,10 @@ export default defineType({
     defineField({
       name: 'ogImage',
       title: 'Obrázek pro sociální sítě',
-      type: 'image'
+      type: 'image',
+      options: {
+        hotspot: true
+      }
     })
   ]
 })

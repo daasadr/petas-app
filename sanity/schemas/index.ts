@@ -1,13 +1,15 @@
 
 import homepage from './homePage'
-import page from './articles'
+import articlePage from './article'
+import article from './article'
 import contactPage from './contactMe'
 import videoPage from './videos'
 import myStory from './myStory'
 import myCreation from './myCreation'
 import creationSection from './creationSection'
+import navigation from './navigation'
 
-const schemas = [homepage, page, contactPage, videoPage, myCreation, myStory, creationSection];
+const schemas = [homepage, articlePage, article, contactPage, videoPage, myCreation, myStory, creationSection, navigation];
 
 
 export default schemas;
