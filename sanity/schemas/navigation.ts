@@ -26,7 +26,7 @@ export default defineType({
         title: 'Interní odkaz',
         type: 'reference',
         to: [
-            {type: 'articlePage'},
+            {type: 'articleCollection'},
             {type: 'myStory'},
             {type: 'myCreations'},
             {type: 'videoPage'},

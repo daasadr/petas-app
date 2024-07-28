@@ -1,7 +1,7 @@
 import { defineType, defineField } from 'sanity'
 
 export default defineType({
-  name: 'articlePage',
+  name: 'articleCollection',
   title: 'Stránka s články',
   type: 'document',
   fields: [
@@ -25,7 +25,7 @@ export default defineType({
       type: 'text'
     }),
     defineField({
-      name: 'výpis článků',
+      name: 'articleList',
       title: 'články',
       type: 'array',
       of: [
