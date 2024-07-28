@@ -68,7 +68,7 @@ export interface CreationSection {
   author: string
   publishedAt: string
   content: Array<PortableTextBlock | ImageAsset>
-  slug: Slug
+  slug: string
   
 
 }

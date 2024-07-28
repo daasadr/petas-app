@@ -120,7 +120,7 @@ export async function getMyCreations(): Promise<MyCreationsType[]> {
   );
 }
 
-export async function getCreationSection(slug: string): Promise<CreationSection>{
+export async function getCreationSection(slug: string): Promise<CreationSection|null>{
   return client.fetch(
     groq`*[_type == "creationSection" && slug.current == $slug][0]{
     _id,

@@ -1,7 +1,7 @@
 import { getCreationSection, getMyCreations, } from '../../../sanity/sanity-utils'
 import CustomPortableTextComponent from '../../../components/CustomPortableTextComponent'
 import { PortableTextBlock, ImageAsset, FileAsset } from 'sanity'
-import { CreationSection  } from '../../../types/types'
+import { CreationSection, MyCreationsType  } from '../../../types/types'
 
 interface CreationPage {
   title: string
