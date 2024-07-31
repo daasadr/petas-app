@@ -1,54 +1,36 @@
-import Link from 'next/link'
+import Link from 'next/link';
 
-type NavItem = {
+export type NavItem = {
   _id: string;
   title: string;
   linkType: 'internal' | 'external';
-  internalLink?: {
-    _type: string;
-    slug: string;
-  };
-  externalLink?: string;
-}
+  link: string | null;
+  internalLinkType?: string;
+};
 
 export default function Navigation({ items }: { items: NavItem[] }) {
-  console.log('Navigation items:', items);
+  if (!items || items.length === 0) {
+    return <nav>No navigation items available</nav>;
+  }
+
   return (
-    <nav>
+    <nav style={{ display: 'flex', gap: '1rem', padding: '1rem', background: '#f0f0f0' }}>
       {items.map((item) => {
-        if (item.linkType === 'internal' && item.internalLink){
-          let href = '/';
-          switch (item.internalLink._type) {
-            case 'myCreations':
-              href = '/my-creations';
-              break;
-            case 'myStory':
-              href = '/my-story';
-              break;
-            case 'videoPage':
-              href = '/videos';
-              break;
-            case 'contactPage':
-              href = '/contact';
-              break;
-            case 'articleCollection':
-              href = '/articles';
-              break;       
-          }
+        if (item.linkType === 'internal' && item.link) {
           return (
-            <Link key = {item._id} href = {href}>
-              {item.title}
+            <Link key={item._id} href={item.link}>
+              {item.title || 'Unnamed Item'}
             </Link>
           );
-        } else if (item.linkType === 'external' && item.externalLink){
+        } else if (item.linkType === 'external' && item.link) {
           return (
-            <a key={item._id} href={item.externalLink} target="_blank" rel="noopener noreferrer">
-            {item.title}
+            <a key={item._id} href={item.link} target="_blank" rel="noopener noreferrer" style={{ color: 'blue', textDecoration: 'none' }}>
+              {item.title || 'Unnamed Item'}
             </a>
           );
         }
-return null;
+        return null;
       })}
     </nav>
-  )
+  );
 }

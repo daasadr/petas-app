@@ -17,6 +17,15 @@ export default defineType({
       of: [
         {type: 'reference', to: [{type: 'creationSection'}]}
       ]
-    })
+    }),
+    defineField({
+      name: 'slug',
+      title: 'Slug',
+      type: 'slug',
+      options: {
+        source: 'title',
+        maxLength: 96,
+      },
+    }),
   ]
 })

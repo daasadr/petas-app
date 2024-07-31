@@ -2,7 +2,7 @@ import { defineType, defineField } from 'sanity'
 
 export default defineType({
   name: 'myStory',
-  title: 'Můj příběh',
+  title: 'my-story',
   type: 'document', 
   fields: [
     defineField({
@@ -23,6 +23,15 @@ export default defineType({
       name: 'imageUrl',
       title: 'Fotografie',
       type: 'image'
-    })
+    }),
+    defineField({
+      name: 'slug',
+      title: 'Slug',
+      type: 'slug',
+      options: {
+        source: 'title',
+        maxLength: 96,
+      },
+    }),
   ]
 })

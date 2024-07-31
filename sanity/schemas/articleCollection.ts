@@ -2,7 +2,7 @@ import { defineType, defineField } from 'sanity'
 
 export default defineType({
   name: 'articleCollection',
-  title: 'Stránka s články',
+  title: 'article-collection',
   type: 'document',
   fields: [
     defineField({
@@ -25,7 +25,7 @@ export default defineType({
       type: 'text'
     }),
     defineField({
-      name: 'articleList',
+      name: 'articles',
       title: 'články',
       type: 'array',
       of: [

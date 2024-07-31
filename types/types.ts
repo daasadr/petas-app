@@ -17,15 +17,15 @@ export interface HomePage {
   intro: Array<PortableTextBlock | ImageAsset>
 }
 
-export interface ArticlePage {
+export interface ArticleCollection {
   _id: string
-  _type: 'articlePage'
+  _type: 'articleCollection'
   articles: Article[]
   title: string
   excerpt? : string
   author: string
-  slug: Slug
-  descriptions: string
+  slug: string
+  description: string
   featuredArticles: Article[]
   showAllArticles: boolean
   articlesPerPage: number

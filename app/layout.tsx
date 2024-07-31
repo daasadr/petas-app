@@ -7,6 +7,8 @@ export default async function RootLayout({
   children: React.ReactNode
 }) {
   const navigationItems = await getNavigation()
+console.log('Navigation items in layout:', JSON.stringify(navigationItems, null, 2))
+
 
   return (
     <html lang="cs">

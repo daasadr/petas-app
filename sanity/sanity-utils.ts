@@ -1,6 +1,8 @@
 import imageUrlBuilder from '@sanity/image-url'
 import { createClient, groq } from "next-sanity";
-import { HomePage, ArticlePage, Article, ContactPage, MyCreationsType, MyStory, VideoPage, CreationSection } from "../types/types";
+import { HomePage, Article, ContactPage, MyCreationsType, MyStory, VideoPage, CreationSection, ArticleCollection } from "../types/types";
+import { NavItem } from '@/components/Navigation';
+
 
 const client = createClient({
   projectId: "h246n0z5",
@@ -28,35 +30,57 @@ export async function getHomePage(): Promise<HomePage> {
     return result;
 }
 
+
 export async function getNavigation() {
-  return client.fetch(`*[_type == "navigation"] | order(order asc) {
+  const navigationItems: NavItem[] = await client.fetch(`*[_type == "navigation"] | order(order asc) {
     _id,
     title,
     linkType,
     "link": select(
-      linkType == 'internal' => select(
-        
-        internalLink._type == 'myCreations' => '/my-creations',
-        internalLink._type == 'myStory' => '/my-story',
-        internalLink._type == 'videoPage' => '/videos',
-        internalLink._type == 'contactPage' => '/contact',
-        internalLink._type == 'articlePage' => '/articlePage/' + internalLink->slug.current,
-        '/'
-      ),
+      linkType == 'internal' => '/' + internalLink->slug.current,
       linkType == 'external' => externalLink,
-      '/'
-    )
-  }`)
+      null
+    ),
+    "internalLinkType": internalLink->_type
+  }`);
+
+  // Zpracování interních odkazů
+  navigationItems.forEach((item: NavItem) => {
+    if (item.linkType === 'internal' && !item.link) {
+      switch (item.internalLinkType) {
+        case 'myCreations':
+          item.link = '/my-creation';
+          break;
+        case 'myStory':
+          item.link = '/about-me';
+          break;
+        case 'videoPage':
+          item.link = '/videos';
+          break;
+        case 'contactPage':
+          item.link = '/contact';
+          break;
+        case 'articleCollection':
+          item.link = '/article-collection';
+          break;
+        
+      }
+    }
+  });
+
+  console.log('Navigation items from Sanity:', JSON.stringify(navigationItems, null, 2));
+  return navigationItems;
 }
 
-export async function getArticlePage(): Promise<ArticlePage> {
-  const result = await client.fetch<ArticlePage>(
-    groq`*[_type == "articlePage"][0]{
+
+export async function getArticleCollection(): Promise<ArticleCollection> {
+  const result = await client.fetch<ArticleCollection>(
+    groq`*[_type == "articleCollection"][0]{
       _id,
       _type,
       title,
       slug,
-      excerpt,
+      description,
       "articles": articles[]->{
       _id,
       title,
