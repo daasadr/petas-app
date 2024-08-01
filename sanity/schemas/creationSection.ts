@@ -17,20 +17,60 @@ export default defineType({
       type: 'array',
       of: [
         {type: 'block'},
-        {type: 'image'}
+        {type: 'image'},
+        
       ]
     }),
     defineField({
-  name: 'image',
-  type: 'image',
-  fields: [
-    {
-      name: 'alt',
-      type: 'string',
-      title: 'Alternative text'
-    }
-  ]
-})
+      name: 'video',
+      title: 'video produktu',
+      type: 'object',
+       fields: [
+            {
+              name: 'videoType',
+              title: 'Typ videa',
+              type: 'string',
+              options: {
+                list: [
+                  {title: 'YouTube video', value: 'youtube'},
+                  {title: 'Nahraný soubor', value: 'file'}
+                ],
+                layout: 'radio'
+              }
+            },
+            {
+              name: 'youtubeVideoId',
+              title: 'YouTube Video ID',
+              type: 'string',
+              hidden: ({parent}) => parent?.videoType !== 'youtube'
+            },
+            {
+              name: 'videoFile',
+              title: 'Video soubor',
+              type: 'file',
+              options: {
+                accept: 'video/*'
+              },
+              hidden: ({parent}) => parent?.videoType !== 'file'
+            },
+            {
+              name: 'caption',
+              title: 'Popisek k videu',
+              type: 'string'
+            }
+          ]
+
+    }),
+
+defineField({
+      name: 'slug',
+      title: 'Slug',
+      type: 'slug',
+      options: {
+        source: 'title',
+        maxLength: 96,
+      },
+    }),
 
 
   ]

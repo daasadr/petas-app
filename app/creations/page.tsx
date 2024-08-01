@@ -1,7 +1,7 @@
 import { getMyCreations } from '../../sanity/sanity-utils'
 import { PortableTextBlock, ImageAsset, FileAsset } from 'sanity'
 import CustomPortableTextComponent from '../../components/CustomPortableTextComponent'
-import {  CreationSection } from '../../types/types'
+import {  CreationSection , MyCreationsType} from '../../types/types'
 
 export default async function MyCreations() {
   const creations = await getMyCreations()
@@ -9,7 +9,7 @@ export default async function MyCreations() {
   return (
     <div>
       <h1>Moje tvorba</h1>
-      {creations.map((creation) => (
+      {creations.map((creation: MyCreationsType) => (
         <section key={creation._id}>
           <h2>{creation.title}</h2>
           {creation.sections.map((section: CreationSection, index) => (

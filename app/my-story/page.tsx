@@ -19,7 +19,7 @@ export default async function MyStory() {
       <h1>{myStory.title}</h1>
       <CustomPortableTextComponent value={myStory.content as (PortableTextBlock | ImageAsset)[]} />
       
-      <Image src={urlFor(myStory.imageUrl).url()}  alt="Moje fotografie" width={500} height={300}/>
+      <Image src={(myStory.imageUrl)}  alt="Moje fotografie" width={500} height={300}/>
     </div>
   )
 }

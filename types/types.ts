@@ -67,7 +67,7 @@ export interface CreationSection {
   _id: number
   author: string
   publishedAt: string
-  content: Array<PortableTextBlock | ImageAsset>
+  content: Array<PortableTextBlock | ImageAsset| FileAsset>
   slug: string
   
 

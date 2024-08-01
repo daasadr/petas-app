@@ -46,13 +46,13 @@ export async function getNavigation() {
 
   // Zpracování interních odkazů
   navigationItems.forEach((item: NavItem) => {
-    if (item.linkType === 'internal' && !item.link) {
+    if (item.linkType === 'internal' ) {
       switch (item.internalLinkType) {
         case 'myCreations':
-          item.link = '/my-creation';
+          item.link = '/creation';
           break;
         case 'myStory':
-          item.link = '/about-me';
+          item.link = '/my-story';
           break;
         case 'videoPage':
           item.link = '/videos';
@@ -61,7 +61,7 @@ export async function getNavigation() {
           item.link = '/contact';
           break;
         case 'articleCollection':
-          item.link = '/article-collection';
+          item.link = '/articles';
           break;
         
       }
@@ -88,8 +88,7 @@ export async function getArticleCollection(): Promise<ArticleCollection> {
       publishedAt,
       author,
       excerpt,
-      tags,
-      "ogImageUrl": ogImage.asset->url},
+      tags,}
       featuredArticles,
       showAllArticles,
       articlesPerPage
@@ -112,7 +111,7 @@ export async function getArticleBySlug(slug: string): Promise<Article | null> {
       publishedAt,
       author,
       tags,
-      "ogImageUrl": ogImage.asset->url
+      
     }`,
     { slug }
   );
@@ -130,11 +129,11 @@ export async function getContactPage(): Promise<ContactPage> {
 }
 
 export async function getMyCreations(): Promise<MyCreationsType[]> {
-  return client.fetch(
+  const result = await client.fetch(
     groq`*[_type == "myCreations"]{
       _id,
       title,
-      "sections": sections[]-> {
+      "sections": creationSection[]-> {
         _type,
         title,
         content,
@@ -142,31 +141,34 @@ export async function getMyCreations(): Promise<MyCreationsType[]> {
       }
     }`
   );
+  console.log('MyCreations data:', result);
+  return result;
 }
 
 export async function getCreationSection(slug: string): Promise<CreationSection|null>{
-  return client.fetch(
+  const result = await client.fetch(
     groq`*[_type == "creationSection" && slug.current == $slug][0]{
     _id,
     title,
     _type,
     content,
     "slug": slug.current,
-    "imageUrl": image.asset->url
     youtubeVideoId,
         "videoUrl": videoFile.asset->url,
         caption,
        
     }`,
     {slug}
-  )
+  );
+  return result || null;
 }
+
   export async function getMyStory(): Promise<MyStory | null> {
   const result = await client.fetch<MyStory | null>(
     groq`*[_type == "myStory"][0]{
       title,
       content,
-      "imageUrl": image.asset->url
+      
     }`
   );
   console.log("Data načtená ze Sanity:", result);
