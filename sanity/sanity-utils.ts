@@ -1,6 +1,6 @@
 import imageUrlBuilder from '@sanity/image-url'
 import { createClient, groq } from "next-sanity";
-import { HomePage, Article, ContactPage, MyCreationsType, MyStory, VideoPage, CreationSection, ArticleCollection } from "../types/types";
+import { HomePage, Article, ContactPage, Creation, MyStory, VideoPage, } from "../types/types";
 import { NavItem } from '@/components/Navigation';
 
 
@@ -49,7 +49,7 @@ export async function getNavigation() {
     if (item.linkType === 'internal' ) {
       switch (item.internalLinkType) {
         case 'myCreations':
-          item.link = '/creation';
+          item.link = '/creations';
           break;
         case 'myStory':
           item.link = '/my-story';
@@ -63,7 +63,9 @@ export async function getNavigation() {
         case 'articleCollection':
           item.link = '/articles';
           break;
-        
+        case 'homepage':
+          item.link = '/';
+          break
       }
     }
   });
@@ -73,50 +75,31 @@ export async function getNavigation() {
 }
 
 
-export async function getArticleCollection(): Promise<ArticleCollection> {
-  const result = await client.fetch<ArticleCollection>(
-    groq`*[_type == "articleCollection"][0]{
-      _id,
-      _type,
-      title,
-      slug,
-      description,
-      "articles": articles[]->{
-      _id,
-      title,
-      "slug": slug.current,
-      publishedAt,
-      author,
-      excerpt,
-      tags,}
-      featuredArticles,
-      showAllArticles,
-      articlesPerPage
-    }`
-  );
-    if (!result) {
-    throw new Error('Nepodařilo se načíst data pro stránku s články');
-  }
-  
-  return result;
-}
-
-export async function getArticleBySlug(slug: string): Promise<Article | null> {
+export async function getArticles(): Promise<Article[]> {
   return client.fetch(
-    groq`*[_type == "article" && slug.current == $slug][0]{
+    groq`*[_type == "article"] | order(publishedAt desc) {
       _id,
       title,
-      "slug": slug.current,
-      content,
+      content[]{
+        ...,
+        _type == "image" => {
+          "url": asset->url,
+          "alt": asset->alt
+        },
+        _type == "video" => {
+          "url": url,
+          "caption": caption
+        }
+      },
       publishedAt,
+      slug,
+      excerpt,
       author,
       tags,
-      
-    }`,
-    { slug }
-  );
+      "ogImage": ogImage.asset->url
+    }`
+  )
 }
-
 export async function getContactPage(): Promise<ContactPage> {
   return client.fetch(
     groq`*[_type == "contactPage"][0]{
@@ -128,51 +111,40 @@ export async function getContactPage(): Promise<ContactPage> {
   );
 }
 
-export async function getMyCreations(): Promise<MyCreationsType[]> {
-  const result = await client.fetch(
-    groq`*[_type == "myCreations"]{
+export async function getCreations(): Promise<Creation[]> {
+  return client.fetch(
+    groq`*[_type == "creation"] | order(publishedAt desc) {
       _id,
       title,
-      "sections": creationSection[]-> {
-        _type,
-        title,
-        content,
-        "slug": slug.current
-      }
+          content[]{
+        ...,
+        _type == "image" => {
+          "url": asset->url,
+          "alt": asset->alt
+        },
+        _type == "video" => {
+          "url": url,
+          "caption": caption
+        }
+      },
+      publishedAt
     }`
-  );
-  console.log('MyCreations data:', result);
-  return result;
+  )
 }
 
-export async function getCreationSection(slug: string): Promise<CreationSection|null>{
+
+
+  export async function getMyStory() {
   const result = await client.fetch(
-    groq`*[_type == "creationSection" && slug.current == $slug][0]{
-    _id,
-    title,
-    _type,
-    content,
-    "slug": slug.current,
-    youtubeVideoId,
-        "videoUrl": videoFile.asset->url,
-        caption,
-       
-    }`,
-    {slug}
-  );
-  return result || null;
-}
-
-  export async function getMyStory(): Promise<MyStory | null> {
-  const result = await client.fetch<MyStory | null>(
     groq`*[_type == "myStory"][0]{
       title,
       content,
+      "imageUrl": image.asset->url
       
     }`
   );
   console.log("Data načtená ze Sanity:", result);
-  return result || null;
+  return result;
 }
 
 export async function getVideoPage(): Promise<VideoPage> {

@@ -20,9 +20,12 @@ export default defineType({
       ]
     }),
     defineField({
-      name: 'imageUrl',
-      title: 'Fotografie',
-      type: 'image'
+      name: 'image',
+      title: 'FHlavní obrázek',
+      type: 'image',
+      options: {
+        hotspot: true,
+      },
     }),
     defineField({
       name: 'slug',

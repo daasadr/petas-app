@@ -1,4 +1,6 @@
+import React from 'react';
 import Link from 'next/link';
+import styles from '../styles/Navigation.module.css';
 
 export type NavItem = {
   _id: string;
@@ -8,29 +10,46 @@ export type NavItem = {
   internalLinkType?: string;
 };
 
-export default function Navigation({ items }: { items: NavItem[] }) {
+interface NavigationProps {
+  items: NavItem[];
+  className?: string;
+}
+
+export default function Navigation({ items, className }: NavigationProps) {
   if (!items || items.length === 0) {
-    return <nav>No navigation items available</nav>;
+    return <nav className={className}>No navigation items available</nav>;
   }
 
   return (
-    <nav style={{ display: 'flex', gap: '1rem', padding: '1rem', background: '#f0f0f0' }}>
-      {items.map((item) => {
-        if (item.linkType === 'internal' && item.link) {
-          return (
-            <Link key={item._id} href={item.link}>
-              {item.title || 'Unnamed Item'}
-            </Link>
-          );
-        } else if (item.linkType === 'external' && item.link) {
-          return (
-            <a key={item._id} href={item.link} target="_blank" rel="noopener noreferrer" style={{ color: 'blue', textDecoration: 'none' }}>
-              {item.title || 'Unnamed Item'}
-            </a>
-          );
-        }
-        return null;
-      })}
+    <nav className={`${styles.circularNav} ${className || ''}`}>
+      <div className={styles.navBackground}>
+        <div className={styles.navCircle}>
+          <div className={styles.navItems}>
+            {items.map((item) => {
+              if (item.linkType === 'internal' && item.link) {
+                return (
+                  <Link key={item._id} href={item.link} className={styles.navItem}>
+                    <span className={styles.navText}>{item.title || 'Unnamed Item'}</span>
+                  </Link>
+                );
+              } else if (item.linkType === 'external' && item.link) {
+                return (
+                  <a
+                    key={item._id}
+                    href={item.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={styles.navItem}
+                  >
+                    <span className={styles.navText}>{item.title || 'Unnamed Item'}</span>
+                  </a>
+                );
+              }
+              return null;
+            })}
+          </div>
+        </div>
+      </div>
     </nav>
   );
 }

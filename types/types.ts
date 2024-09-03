@@ -1,5 +1,8 @@
-import { PortableTextBlock, ImageAsset,  Slug, FileAsset } from 'sanity'
+import { PortableTextBlock, ImageAsset,  FileAsset } from 'sanity'
 
+export interface Slug {
+  current: string;
+}
 export interface MenuItem {
   _type: 'object'
   label: string
@@ -17,36 +20,19 @@ export interface HomePage {
   intro: Array<PortableTextBlock | ImageAsset>
 }
 
-export interface ArticleCollection {
-  _id: string
-  _type: 'articleCollection'
-  articles: Article[]
-  title: string
-  excerpt? : string
-  author: string
-  slug: string
-  description: string
-  featuredArticles: Article[]
-  showAllArticles: boolean
-  articlesPerPage: number
 
-}
 
 export interface Article {
-  map(arg0: (artic: Article) => import("react").JSX.Element): import("react").ReactNode | Iterable<import("react").ReactNode>
-  _type: 'artic'
+  _type: 'article'
   title: string
   slug: Slug
-  content: Array<PortableTextBlock | ImageAsset | FileAsset>
-  _id: number
+  content: (PortableTextBlock | ImageBlock | VideoBlock)[]
+  _id: string
   excerpt: string
   publishedAt: string
   author: string
   tags: string[]
-  
-  ogImage: ImageAsset
-
-
+  ogImage: string
 }
 export interface ContactPage {
   _type: 'contactPage'
@@ -61,32 +47,30 @@ export interface ContactPage {
   }>
 }  
 
-export interface CreationSection {
-  _type: 'creationSection'
-  title: string
-  _id: number
-  author: string
-  publishedAt: string
-  content: Array<PortableTextBlock | ImageAsset| FileAsset>
-  slug: string
-  
-
-}
-
-export interface MyCreationsType {
-  _type: 'myCreations'
-  title: string
+export interface Creation {
+  _type: 'creation'
   _id: string
-  sections: CreationSection[] // Reference to CreationSection
-  
+  title: string
+  content: (PortableTextBlock | ImageBlock | VideoBlock)[]
+  publishedAt: string
 }
 
+interface ImageBlock {
+  _type: 'image'
+  url: string
+  alt?: string
+}
+
+interface VideoBlock {
+  _type: 'video'
+  url: string
+  caption?: string
+}
 export interface MyStory {
   _type: 'myStory'
   title: string
   content: Array<PortableTextBlock | ImageAsset>
   imageUrl: string
-  url: string
 }
 
 export interface VideoPage {

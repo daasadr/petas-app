@@ -19,6 +19,15 @@ export default defineType({
         {type: 'image'}
       ]
     }),
+    defineField({
+      name: 'slug',
+      title: 'Slug',
+      type: 'slug',
+      options: {
+        source: 'title',
+        maxLength: 96,
+      },
+    }),
     /*defineField({
   name: 'menuItems',
   title: 'Položky menu',

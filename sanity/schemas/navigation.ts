@@ -26,11 +26,12 @@ export default defineType({
         title: 'Interní odkaz',
         type: 'reference',
         to: [
-            {type: 'articleCollection'},
+            {type: 'article'},
             {type: 'myStory'},
-            {type: 'myCreations'},
+            {type: 'creation'},
             {type: 'videoPage'},
-            {type: 'contactPage'}
+            {type: 'contactPage'},
+            {type: 'homepage'}
         ],
         hidden: ({document}) => document?.linkType !== 'internal'
     }),

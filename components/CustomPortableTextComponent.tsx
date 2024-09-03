@@ -18,15 +18,15 @@ const CustomPortableTextComponent = ({ value }: { value: Array<ContentBlock> }) 
   const customComponents: Partial<PortableTextReactComponents> = {
     types: {
       image: ({ value }: { value: ImageAsset }) => {
-        if (!value.url) return <span>Obrázek není k dispozici</span>;
+        if (!value.asset) return <span>Obrázek není k dispozici</span>;
         
-        const imageUrl = urlFor(value).url();
+        const imageUrl = urlFor(value.asset).url();
         
 
         return (
           <div>
             <Image 
-              src={imageUrl} 
+              src={imageUrl}
               alt="Obrázek" 
               width={500} 
               height={300} 

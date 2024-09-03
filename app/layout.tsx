@@ -1,5 +1,6 @@
 import { getNavigation } from '../sanity/sanity-utils'
-import Navigation from '../components/Navigation'
+import DynamicNavigation from '../components/DynamicNavigation'
+import '../styles/globals.css'
 
 export default async function RootLayout({
   children,
@@ -7,14 +8,14 @@ export default async function RootLayout({
   children: React.ReactNode
 }) {
   const navigationItems = await getNavigation()
-console.log('Navigation items in layout:', JSON.stringify(navigationItems, null, 2))
-
 
   return (
     <html lang="cs">
       <body>
-        <Navigation items={navigationItems} />
-        {children}
+        <DynamicNavigation items={navigationItems} />
+        <main>
+          {children}
+        </main>
       </body>
     </html>
   )
