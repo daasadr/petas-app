@@ -3,8 +3,6 @@ import CustomPortableTextComponent from '../../components/CustomPortableTextComp
 import { getMyStory, urlFor  } from '../../sanity/sanity-utils'
 import Image from 'next/image'
 
-
-
 export default async function MyStory() {
   try{
     const myStory = await getMyStory()

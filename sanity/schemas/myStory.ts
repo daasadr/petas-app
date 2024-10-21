@@ -20,7 +20,6 @@ export default defineType({
       ]
     }),
     defineField({
-<<<<<<< HEAD
       name: 'image',
       title: 'FHlavní obrázek',
       type: 'image',
@@ -37,11 +36,5 @@ export default defineType({
         maxLength: 96,
       },
     }),
-=======
-      name: 'photoUrl',
-      title: 'Fotografie',
-      type: 'image'
-    })
->>>>>>> f9009f35321543bf6e84586dbc5c535235155826
   ]
 })
