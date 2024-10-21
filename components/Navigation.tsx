@@ -1,16 +1,10 @@
 import React from 'react';
 import Link from 'next/link';
+import { NavItem } from './types';
 import styles from '../styles/Navigation.module.css';
 
-export type NavItem = {
-  _id: string;
-  title: string;
-  linkType: 'internal' | 'external';
-  link: string | null;
-  internalLinkType?: string;
-};
 
-interface NavigationProps {
+export interface NavigationProps {
   items: NavItem[];
   className?: string;
 }

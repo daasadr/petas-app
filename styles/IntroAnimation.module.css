@@ -1,0 +1,259 @@
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 1000;
+    overflow: hidden;
+}
+
+/* Layer 1 */
+.layer1Container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.layer1Image {
+    position: absolute;
+    width: 100vw;
+    height: 100vh;
+    object-fit: cover;
+    object-position: center;
+}
+
+.layer1Animate::before,
+.layer1Animate::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    background: url('/hotA.jpg') center center/cover no-repeat;
+    will-change: transform, clip-path, mask-image, filter, opacity;
+}
+
+.layer1Animate::before {
+    left: 0;
+    animation:
+        slideLeftOut 4s ease-in-out forwards,
+        diagonalFadeLeft 4s ease-in-out forwards;
+}
+
+.layer1Animate::after {
+    right: 0;
+    animation:
+        slideRightOut 4s ease-in-out forwards,
+        diagonalFadeRight 4s ease-in-out forwards;
+}
+
+.layer1Animate .layer1Image {
+    opacity: 0;
+}
+
+/* Layer 2 */
+.layer2Container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.layer2Image {
+    position: absolute;
+    width: 100vw;
+    height: 100vh;
+    object-fit: cover;
+    object-position: center;
+}
+
+.layer2Animate::before,
+.layer2Animate::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    background: url('/hotField.jpg') center center/cover no-repeat;
+    will-change: transform, clip-path, mask-image, filter, opacity;
+}
+
+.layer2Animate::before {
+    left: 0;
+    animation:
+        slideLeftOut 2.5s ease-in-out forwards,
+        verticalFadeLeft 2.5s ease-in-out forwards;
+    animation-delay: 2.3s;
+}
+
+.layer2Animate::after {
+    right: 0;
+    animation:
+        slideRightOut 2.5s ease-in-out forwards,
+        verticalFadeRight 2.5s ease-in-out forwards;
+    animation-delay: 2.3s;
+}
+
+.layer2Animate .layer2Image {
+    opacity: 0;
+}
+
+@keyframes slideLeftOut {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(-100%);
+    }
+}
+
+@keyframes slideRightOut {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(100%);
+    }
+}
+
+@keyframes diagonalFadeLeft {
+    0% {
+        clip-path: polygon(0 0, 100% 0, 0 100%, 0 100%);
+        -webkit-mask-image: linear-gradient(45deg, 
+            black 0%,
+            black 60%,
+            transparent 100%
+        );
+        mask-image: linear-gradient(45deg,
+            black 0%,
+            black 60%,
+            transparent 100%
+        );
+        filter: blur(0);
+    }
+    100% {
+        clip-path: polygon(0 0, 0 0, 0 100%, 0 100%);
+        -webkit-mask-image: linear-gradient(45deg,
+            black 0%,
+            transparent 40%
+        );
+        mask-image: linear-gradient(45deg,
+            black 0%,
+            transparent 40%
+        );
+        filter: blur(20px);
+    }
+}
+
+@keyframes diagonalFadeRight {
+    0% {
+        clip-path: polygon(100% 0, 100% 100%, 0 100%, 100% 0);
+        -webkit-mask-image: linear-gradient(-45deg,
+            black 0%,
+            black 60%,
+            transparent 100%
+        );
+        mask-image: linear-gradient(-45deg,
+            black 0%,
+            black 60%,
+            transparent 100%
+        );
+        filter: blur(0);
+    }
+    100% {
+        clip-path: polygon(100% 0, 100% 100%, 100% 100%, 100% 0);
+        -webkit-mask-image: linear-gradient(-45deg,
+            black 0%,
+            transparent 40%
+        );
+        mask-image: linear-gradient(-45deg,
+            black 0%,
+            transparent 40%
+        );
+        filter: blur(20px);
+    }
+}
+
+@keyframes verticalFadeLeft {
+    0% {
+        clip-path: polygon(0 0, 50% 0, 50% 100%, 0 100%);
+        -webkit-mask-image: linear-gradient(90deg,
+            black 0%,
+            black 60%,
+            transparent 100%
+        );
+        mask-image: linear-gradient(90deg,
+            black 0%,
+            black 60%,
+            transparent 100%
+        );
+        filter: blur(0);
+    }
+    100% {
+        clip-path: polygon(0 0, 0 0, 0 100%, 0 100%);
+        -webkit-mask-image: linear-gradient(90deg,
+            black 0%,
+            transparent 40%
+        );
+        mask-image: linear-gradient(90deg,
+            black 0%,
+            transparent 40%
+        );
+        filter: blur(20px);
+    }
+}
+
+@keyframes verticalFadeRight {
+    0% {
+        clip-path: polygon(50% 0, 100% 0, 100% 100%, 50% 100%);
+        -webkit-mask-image: linear-gradient(-90deg,
+            black 0%,
+            black 60%,
+            transparent 100%
+        );
+        mask-image: linear-gradient(-90deg,
+            black 0%,
+            black 60%,
+            transparent 100%
+        );
+        filter: blur(0);
+    }
+    100% {
+        clip-path: polygon(100% 0, 100% 0, 100% 100%, 100% 100%);
+        -webkit-mask-image: linear-gradient(-90deg,
+            black 0%,
+            transparent 40%
+        );
+        mask-image: linear-gradient(-90deg,
+            black 0%,
+            transparent 40%
+        );
+        filter: blur(20px);
+    }
+}
+
+.enterButton {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 15px 30px;
+    font-size: 1.5rem;
+    background: rgba(255, 255, 255, 0.2);
+    border: 2px solid white;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 10;
+}
+
+.enterButton:hover {
+    background: rgba(255, 255, 255, 0.3);
+}

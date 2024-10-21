@@ -1,51 +1,20 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-html,
-body {
-  height: 100%;
-  margin: 0;
-}
-
-body {
-  height: 100vh;
-    /* Pokrývá výšku viditelného okna */
-  width: 100vw;
-    /* Pokrývá šířku viditelného okna */
-  background-image: url('/path-to-your-image.jpg');
-  background-size: cover;
-  /* Pokryje celé pozadí */
-  background-position: center center;
-  /* Uloží obrázek na střed */
-  background-repeat: no-repeat;
-  /* Zabraní opakování obrázku */
-}
-body {
-  background-color: #121212;
-  color: #ffffff;
-}
 body,
 html {
   margin: 0;
   padding: 0;
   height: 100%;
   font-family: Arial, sans-serif;
-}
-
-.background {
-  background-color: #000;
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.main-container {
+  background-color: #121212;
+  color: #ffffff;
   position: relative;
-  width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 20px;
-  color: #fff;
+}
+
+.layoutContainer {
+  position: relative;
+  z-index: 1;
+}
+
+.mainContent {
+  position: relative;
+  z-index: 2;
 }

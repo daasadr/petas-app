@@ -1,0 +1,15 @@
+.centeredImage {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 80%;
+    text-align: center;
+    /* Pro případné inline elementy uvnitř */
+}
+
+.centered-image img {
+    display: inline-block;
+    /* Nebo 'block', pokud je to potřeba */
+    margin: 0 auto;
+    /* Další způsob, jak zajistit centrování */
+}

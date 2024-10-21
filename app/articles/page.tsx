@@ -2,6 +2,7 @@ import { getArticles } from '../../sanity/sanity-utils'
 import { PortableText } from '@portabletext/react'
 import Image from 'next/image'
 import { Article } from '@/types/types'
+import styles from '@/styles/Articles.module.css'
 
 export default async function ArticlesPage() {
   const articles: Article[] = await getArticles()
@@ -16,8 +17,8 @@ export default async function ArticlesPage() {
             value={article.content}
             components={{
               types: {
-                image: ({ value }: {value: any}) => (
-                  <Image
+                image : ({ value }: {value: any}) => (
+                  <Image className={styles.centredImage}
                     src={value.url}
                     alt={value.alt || ' '}
                     width={500}

@@ -24,7 +24,7 @@ const CustomPortableTextComponent = ({ value }: { value: Array<ContentBlock> }) 
         
 
         return (
-          <div>
+          <div className='centred-image'>
             <Image 
               src={imageUrl}
               alt="Obrázek" 

@@ -4,9 +4,8 @@ import React from 'react';
 import { usePathname } from 'next/navigation';
 import Navigation from './Navigation';
 import AnimatedNavigation from './AnimatedNavigation';
-import { NavItem } from './Navigation';
+import { NavItem } from './types';
 import styles from '../styles/Navigation.module.css';
-
 
 interface DynamicNavigationProps {
   items: NavItem[];

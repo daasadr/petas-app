@@ -1,7 +1,7 @@
 import imageUrlBuilder from '@sanity/image-url'
 import { createClient, groq } from "next-sanity";
 import { HomePage, Article, ContactPage, Creation, MyStory, VideoPage, } from "../types/types";
-import { NavItem } from '@/components/Navigation';
+import { NavItem} from '@/components/types';
 
 
 const client = createClient({
@@ -41,12 +41,13 @@ export async function getNavigation() {
       linkType == 'external' => externalLink,
       null
     ),
-    "internalLinkType": internalLink->_type
+    "internalLinkType": internalLink->_type,
+    externalLink
   }`);
 
   // Zpracování interních odkazů
   navigationItems.forEach((item: NavItem) => {
-    if (item.linkType === 'internal' ) {
+    if (item.linkType === 'internal' && item.internalLinkType ) {
       switch (item.internalLinkType) {
         case 'myCreations':
           item.link = '/creations';
