@@ -15,25 +15,31 @@ type ImageBlock = {
 type ContentBlock = PortableTextBlock | ImageAsset | FileAsset
 
 const CustomPortableTextComponent = ({ value }: { value: Array<ContentBlock> }) => {
+  if (!value || !Array.isArray(value)) {
+    return null;
+  }
+
   const customComponents: Partial<PortableTextReactComponents> = {
     types: {
       image: ({ value }: { value: ImageAsset }) => {
-        if (!value.asset) return <span>Obrázek není k dispozici</span>;
+        if (!value?.asset) return null;
         
-        const imageUrl = urlFor(value.asset).url();
-        
-
-        return (
-          <div className='centred-image'>
-            <Image 
-              src={imageUrl}
-              alt="Obrázek" 
-              width={500} 
-              height={300} 
-              layout="responsive"
-            />
-          </div>
-        )
+        try {
+          const imageUrl = urlFor(value.asset).url();
+          return (
+            <div className='centred-image'>
+              <Image 
+                src={imageUrl}
+                alt="Obrázek" 
+                width={500} 
+                height={300}
+              />
+            </div>
+          )
+        } catch (error) {
+          console.error("Error processing image:", error);
+          return null;
+        }
       },
       file: ({ value }: { value: FileAsset }) => {
         if (!value?.url) return <span>Video není k dispozici</span>;

@@ -7,7 +7,7 @@ import { NavItem} from '@/components/types';
 const client = createClient({
   projectId: "h246n0z5",
   dataset: "production",
-  apiVersion: "2024-06-26",
+  apiVersion: "1",
   useCdn: false, // set to `true` to fetch from edge cache
   token: process.env.SANITY_API_TOKEN
 });
@@ -135,17 +135,31 @@ export async function getCreations(): Promise<Creation[]> {
 
 
 
-  export async function getMyStory() {
-  const result = await client.fetch(
-    groq`*[_type == "myStory"][0]{
-      title,
-      content,
-      "imageUrl": image.asset->url
-      
-    }`
-  );
-  console.log("Data načtená ze Sanity:", result);
-  return result;
+export async function getMyStory() {
+  try {
+    const result = await client.fetch(
+      groq`*[_type == "myStory"][0]{
+        title,
+        content,
+        "imageUrl": image.asset->url     
+      }`
+    );
+    
+    console.log("Data načtená ze Sanity:", result);
+    
+    if (!result) {
+      return null;
+    }
+    
+    return {
+      ...result,
+      content: result.content || [],
+      imageUrl: result.imageUrl || null
+    };
+  } catch (error) {
+    console.error("Error fetching MyStory:", error);
+    return null;
+  }
 }
 
 export async function getVideoPage(): Promise<VideoPage> {
