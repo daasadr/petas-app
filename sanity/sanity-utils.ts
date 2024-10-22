@@ -2,7 +2,7 @@ import imageUrlBuilder from '@sanity/image-url'
 import { createClient, groq } from "next-sanity";
 import { HomePage, Articles,ArticlePage,ArticlePreview, ContactPage, VideoPage, Page, Creations} from "../types/types";
 import { NavItem} from '@/components/types';
-
+import { config } from './config'
 
 const client = createClient({
   projectId: "h246n0z5",
@@ -191,29 +191,30 @@ export async function getCreations(): Promise<Creations> {
 
 
 export async function getMyStory() {
+  const client = createClient(config);
+
   try {
-    const result = await client.fetch(
+    const myStory = await client.fetch(
       groq`*[_type == "myStory"][0]{
         title,
         content,
-        "imageUrl": image.asset->url     
+        "imageUrl": image.asset->url
       }`
     );
-    
-    console.log("Data načtená ze Sanity:", result);
-    
-    if (!result) {
+
+    if (!myStory) {
+      console.log("No story found in Sanity");
       return null;
     }
-    
+
     return {
-      ...result,
-      content: result.content || [],
-      imageUrl: result.imageUrl || null
+      title: myStory.title || 'Untitled',
+      content: myStory.content || [],
+      imageUrl: myStory.imageUrl || null,
     };
   } catch (error) {
-    console.error("Error fetching MyStory:", error);
-    return null;
+    console.error("Error fetching story from Sanity:", error);
+    throw error;
   }
 }
 
