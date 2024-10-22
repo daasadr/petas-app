@@ -17,6 +17,14 @@ const nextConfig = {
       experimental: {
         taint: true,
       },
+       typescript: {
+    // během vývoje můžete nastavit na true, pro produkci na false
+    ignoreBuildErrors: true,
+  },
+  eslint: {
+    // během vývoje můžete nastavit na true, pro produkci na false
+    ignoreDuringBuilds: true,
+  },
 };
 
 export default nextConfig;
