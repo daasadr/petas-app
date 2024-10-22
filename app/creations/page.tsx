@@ -1,47 +1,43 @@
-import { getCreations } from '../../sanity/sanity-utils'
-import { PortableText } from '@portabletext/react'
+
 import Image from 'next/image'
-import { Creation } from '@/types/types'
+import Link from 'next/link'
+import { getCreations } from '@/sanity/sanity-utils'
+import { Creations } from '@/types/types'
 
-export default async function CreationPage() {
-  const creations: Creation[] = await getCreations()
+export default async function CreationsPage() {
+  const creations: Creations | null = await getCreations()
 
+  console.log('Creations:', JSON.stringify(creations, null, 2))
+
+  if (!creations) {
+    return <div>Načítání dat se nezdařilo.</div>
+  }
+  console.log('Creations pages:', creations.pages)
+  
   return (
     <div>
-      <h1>Moje tvorba</h1>
-      {creations.map((creation: Creation) => (
-        <article key={creation._id}>
-          <h2>{creation.title}</h2>
-          <PortableText
-            value={creation.content}
-            components={{
-              types: {
-                image: ({ value }) => (
-                  <Image
-                    src={value.url}
-                    alt={value.alt || ' '}
-                    width={500}
-                    height={300}
-                  />
-                ),
-                video: ({ value }) => (
-                  <div>
-                    <iframe
-                      width="560"
-                      height="315"
-                      src={value.url}
-                      frameBorder="0"
-                      allow="autoplay; encrypted-media"
-                      allowFullScreen
-                    ></iframe>
-                    {value.caption && <p>{value.caption}</p>}
-                  </div>
-                ),
-              },
-            }}
-          />
-        </article>
-      ))}
+      <h1>{creations.title || 'Moje tvorba'}</h1>
+      {creations.pages && creations.pages.length > 0 ? (
+        creations.pages.map((page) => (
+          <article key={page._id}>
+            <h2>{page.title}</h2>
+            {page.ogImage && (
+              <Image
+                src={page.ogImage}
+                alt={page.title}
+                width={500}
+                height={300}
+              />
+            )}
+            <p>{page.excerpt}</p>
+            <Link href={`/creations/${page.slug}`}>
+              Přejít na článek
+            </Link>
+          </article>
+        ))
+      ) : (
+        <p>Žádné články k zobrazení.</p>
+      )}
     </div>
   )
 }

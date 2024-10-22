@@ -1,6 +1,6 @@
-import { getHomePage } from '../sanity/sanity-utils'
-import CustomPortableTextComponent from '../components/CustomPortableTextComponent'
-import styles from '../styles/HomePage.module.css';
+import { getHomePage } from '../../sanity/sanity-utils'
+import CustomPortableTextComponent from '../../components/CustomPortableTextComponent'
+import styles from '../../styles/HomePage.module.css'
 
 export default async function Home() {
   const homePage = await getHomePage();

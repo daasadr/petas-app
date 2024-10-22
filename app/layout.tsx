@@ -1,32 +1,51 @@
-import React from 'react';
-import { getNavigation } from '../sanity/sanity-utils';
-import DynamicNavigation from '@/components/DynamicNavigation';
-import SparkEffect from '@/components/SparkEffect';
-import styles from '../styles/Layout.module.css';
-import dynamic from 'next/dynamic';
+import React from 'react'
+import { getNavigation } from '@/sanity/sanity-utils'
+import styles from '@/styles/Layout.module.css'
+import ClientIntroAnimation from '@/components/ClientIntroAnimation'
+import ClientDynamicNavigation from '@/components/ClientDynamicNavigation'
+import ClientSparkEffect from '@/components/ClientSparkeffectComponent'
+import { Metadata } from 'next'
 
-// Dynamicky importujeme IntroAnimation, protože používá useState a useEffect
-const IntroAnimation = dynamic(() => import('@/components/IntroAnimation'), {
-  ssr: false
-});
+// Metadata pro layout
+export const metadata: Metadata = {
+  title: {
+    template: '%s | Název Vašeho Webu',
+    default: 'Název Vašeho Webu', // Nahraďte svým názvem
+  },
+  description: 'Výchozí popis vašeho webu',
+  viewport: 'width=device-width, initial-scale=1',
+  icons: {
+    icon: '/favicon.ico',
+  },
+}
 
 export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
-  const navigationItems = await getNavigation();
+  const navigationItems = await getNavigation()
 
   return (
     <html lang="cs">
+      <head>
+        <meta charSet="utf-8" />
+      </head>
       <body>
-        <IntroAnimation /> {/* Přidáno zde */}
+        <ClientIntroAnimation />
         <div className={styles.mainContent}>
-          <DynamicNavigation items={navigationItems} />
-          <main>{children}</main>
+          <header className={styles.header}>
+            <ClientDynamicNavigation items={navigationItems} />
+          </header>
+          <main className={styles.main}>
+            {children}
+          </main>
+          <footer className={styles.footer}>
+            {/* Footer obsah */}
+          </footer>
         </div>
-        <SparkEffect/>
+        <ClientSparkEffect />
       </body>
     </html>
-  );
+  )
 }

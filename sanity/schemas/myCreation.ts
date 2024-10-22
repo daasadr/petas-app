@@ -2,43 +2,24 @@ import { defineType, defineField } from 'sanity'
 
 export default defineType({
   name: 'creation',
-  title: 'Tvorba',
+  title: 'Creations',
   type: 'document',
   fields: [
     defineField({
       name: 'title',
-      title: 'Název',
+      title: 'Title',
       type: 'string',
     }),
     defineField({
-      name: 'content',
-      title: 'Obsah',
+      name: 'creationPages',
+      title: 'Creation Pages',
       type: 'array',
       of: [
-        { type: 'block' },
-        { type: 'image' },
         {
-          type: 'object',
-          name: 'video',
-          fields: [
-            {
-              name: 'url',
-              type: 'url',
-              title: 'URL videa'
-            },
-            {
-              name: 'caption',
-              type: 'string',
-              title: 'Popisek'
-            }
-          ]
-        }
+          type: 'reference',
+          to: [{ type: 'creationPage' }],
+        },
       ],
     }),
-    defineField({
-      name: 'publishedAt',
-      title: 'Publikováno',
-      type: 'datetime',
-    }),
   ],
-})
+});

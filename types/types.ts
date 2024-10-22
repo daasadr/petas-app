@@ -22,18 +22,39 @@ export interface HomePage {
 
 
 
-export interface Article {
-  _type: 'article'
-  title: string
-  slug: Slug
-  content: (PortableTextBlock | ImageBlock | VideoBlock)[]
-  _id: string
-  excerpt: string
-  publishedAt: string
-  author: string
-  tags: string[]
-  ogImage: string
+export interface ArticlePage {
+  _type: 'articlePage';
+  _id: string;
+  title: string;
+  slug: Slug;
+  publishedAt: string;
+  author: string;
+  mainImage?: Image;
+  excerpt?: string;
+  content: (PortableTextBlock | Image | Video)[];
+  tags: string[];
+  seo?: SeoMetadata;
 }
+
+export interface Articles {
+  featuredArticles: [];
+  _type: 'articlesPage';
+  title: string;
+  description?: string;
+  articlesPerPage: number;
+  seo?: SeoMetadata;
+}
+
+export interface ArticlePreview {
+  _id: string;
+  title: string;
+  slug: Slug;
+  publishedAt: string;
+  author: string;
+  mainImage?: ImagePreview;  // použijeme ImagePreview místo Image
+  excerpt?: string;
+}
+
 export interface ContactPage {
   _type: 'contactPage'
   contactInfo: PortableTextBlock[]
@@ -47,12 +68,17 @@ export interface ContactPage {
   }>
 }  
 
-export interface Creation {
-  _type: 'creation'
-  _id: string
-  title: string
-  content: (PortableTextBlock | ImageBlock | VideoBlock)[]
-  publishedAt: string
+export interface Creations {
+  title: string;
+  pages: CreationPage[];
+}
+
+export interface CreationPage {
+  _id: string;
+  title: string;
+  slug: string;
+  excerpt: string;
+  ogImage: string;
 }
 
 interface ImageBlock {
@@ -65,6 +91,32 @@ interface VideoBlock {
   _type: 'video'
   url: string
   caption?: string
+}
+
+export interface SeoMetadata {
+  metaTitle?: string;
+  metaDescription?: string;
+}
+
+export interface Image {
+  _type: 'image';
+  asset: {
+    _ref: string;
+    _type: 'reference';
+    url: string;  // přidáno
+  };
+  alt?: string;
+  caption?: string;
+}
+export interface ImagePreview {
+  url: string;
+  alt?: string;
+}
+
+export interface Video {
+  _type: 'video';
+  url: string;
+  caption?: string;
 }
 export interface MyStory {
   _type: 'myStory'
@@ -84,6 +136,10 @@ export interface VideoPage {
     caption: string
     videoUrl?: string
   }>
+}
+export interface Page {
+  title: string;
+  content: Array<PortableTextBlock | ImageAsset | FileAsset>;
 }
 
 

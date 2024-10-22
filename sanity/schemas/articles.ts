@@ -1,44 +1,69 @@
 import { defineType, defineField } from 'sanity'
 
+
 export default defineType({
-  name: 'article',
-  title: 'Článek',
+  name: 'articles',
+  title: 'articles',
   type: 'document',
   fields: [
     defineField({
       name: 'title',
-      title: 'Název',
+      title: 'Název stránky',
       type: 'string',
+      validation: Rule => Rule.required()
     }),
     defineField({
-      name: 'content',
-      title: 'Obsah',
+      name: 'slug',
+      title: 'Slug',
+      type: 'slug',
+      options: {
+        source: 'title',
+        maxLength: 96,
+      },
+      validation: Rule => Rule.required()
+    }),
+    defineField({
+      name: 'description',
+      title: 'Popis',
+      type: 'text',
+      description: 'Krátký popis obsahu stránky'
+    }),
+    defineField({
+      name: 'articlesPerPage',
+      title: 'Počet článků na stránku',
+      type: 'number',
+      initialValue: 10,
+      validation: Rule => Rule.required().min(1)
+    }),
+    defineField({
+      name: 'featuredArticles',
+      title: 'Vybrané články',
       type: 'array',
       of: [
-        { type: 'block' },
-        { type: 'image' },
         {
-          type: 'object',
-          name: 'video',
-          fields: [
-            {
-              name: 'url',
-              type: 'url',
-              title: 'URL videa'
-            },
-            {
-              name: 'caption',
-              type: 'string',
-              title: 'Popisek'
-            }
-          ]
+          type: 'reference',
+          to: [{ type: 'articlePage' }]
         }
-      ],
+      ]
     }),
     defineField({
-      name: 'publishedAt',
-      title: 'Publikováno',
-      type: 'datetime',
-    }),
-  ],
+      name: 'seo',
+      title: 'SEO',
+      type: 'object',
+      fields: [
+        {
+          name: 'metaTitle',
+          type: 'string',
+          title: 'Meta titulek',
+          validation: Rule => Rule.max(60)
+        },
+        {
+          name: 'metaDescription',
+          type: 'text',
+          title: 'Meta popis',
+          validation: Rule => Rule.max(160)
+        }
+      ]
+    })
+  ]
 })

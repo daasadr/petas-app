@@ -1,16 +1,16 @@
 import { getPageBySlug, getPages } from '../../../sanity/sanity-utils'
 import CustomPortableTextComponent from '../../../components/CustomPortableTextComponent'
-import { PortableTextBlock, ImageAsset, FileAsset } from 'sanity'
-import { Page as PageType } from '../../../types/types'
+import { Page } from '@/types/types'
 
-interface Page {
-  title: string
-  content: Array<PortableTextBlock | ImageAsset | FileAsset>
-  slug: string
+interface PageProps {
+  params: {
+    slug: string
+  }
 }
 
-export default async function CreationPage({ params }: { params: { slug: string } }) {
-  const page: PageType | null = await getPageBySlug(params.slug)
+export default async function ArticlePage(props: PageProps) {
+  // Destrukturujeme params až po jejich použití
+  const page: Page | null = await getPageBySlug(props.params.slug)
 
   if (!page) return <div>Stránka nenalezena</div>
 

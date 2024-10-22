@@ -1,6 +1,6 @@
 import imageUrlBuilder from '@sanity/image-url'
 import { createClient, groq } from "next-sanity";
-import { HomePage, Article, ContactPage, Creation, MyStory, VideoPage, } from "../types/types";
+import { HomePage, Articles,ArticlePage,ArticlePreview, ContactPage, VideoPage, Page, Creations} from "../types/types";
 import { NavItem} from '@/components/types';
 
 
@@ -16,6 +16,16 @@ const builder = imageUrlBuilder(client)
 
 export function urlFor(source: any) {
   return builder.image(source)
+}
+
+export async function getPageBySlug(slug: string): Promise<Page | null> {
+  return client.fetch(
+    groq`*[_type == "creationPage" && slug.current == $slug][0] {
+      title,
+      content
+    }`,
+    { slug }
+  )
 }
 
 export async function getHomePage(): Promise<HomePage> {
@@ -61,7 +71,7 @@ export async function getNavigation() {
         case 'contactPage':
           item.link = '/contact';
           break;
-        case 'articleCollection':
+        case 'articles':
           item.link = '/articles';
           break;
         case 'homepage':
@@ -76,31 +86,75 @@ export async function getNavigation() {
 }
 
 
-export async function getArticles(): Promise<Article[]> {
+export async function getArticlesPage(): Promise<Articles> {
   return client.fetch(
-    groq`*[_type == "article"] | order(publishedAt desc) {
+    groq`*[_type == "articles"][0] {
+      title,
+      description,
+      articlesPerPage,
+      featuredArticles[]->{
+        _id,
+        title,
+        slug,
+        publishedAt,
+        author,
+        "mainImage": {
+          "url": mainImage.asset->url,
+          "alt": mainImage.alt
+        },
+        excerpt
+      },
+      seo
+    }`
+  )
+}
+
+export async function getArticlePreviews(): Promise<ArticlePreview[]> {
+  return client.fetch(
+    groq`*[_type == "articlePage"] | order(publishedAt desc) {
       _id,
       title,
-      content[]{
+      slug,
+      publishedAt,
+      author,
+      "mainImage": {
+        "url": mainImage.asset->url,
+        "alt": mainImage.alt
+      },
+      excerpt
+    }`
+  )
+}
+
+export async function getArticleBySlug(slug: string): Promise<ArticlePage | null> {
+  return client.fetch(
+    groq`*[_type == "articlePage" && slug.current == $slug][0] {
+      _id,
+      title,
+      slug,
+      publishedAt,
+      author,
+      mainImage {
+        asset->{
+          url,
+          alt
+        },
+        caption
+      },
+      content[] {
         ...,
         _type == "image" => {
           "url": asset->url,
           "alt": asset->alt
-        },
-        _type == "video" => {
-          "url": url,
-          "caption": caption
         }
       },
-      publishedAt,
-      slug,
-      excerpt,
-      author,
       tags,
-      "ogImage": ogImage.asset->url
-    }`
+      seo
+    }`,
+    { slug }
   )
-}
+} 
+
 export async function getContactPage(): Promise<ContactPage> {
   return client.fetch(
     groq`*[_type == "contactPage"][0]{
@@ -112,26 +166,27 @@ export async function getContactPage(): Promise<ContactPage> {
   );
 }
 
-export async function getCreations(): Promise<Creation[]> {
-  return client.fetch(
-    groq`*[_type == "creation"] | order(publishedAt desc) {
-      _id,
+export async function getCreations(): Promise<Creations> {
+  const result = await client.fetch(
+    groq`*[_type == "creation"][0] {
       title,
-          content[]{
-        ...,
-        _type == "image" => {
-          "url": asset->url,
-          "alt": asset->alt
-        },
-        _type == "video" => {
-          "url": url,
-          "caption": caption
-        }
-      },
-      publishedAt
+      "pages": coalesce(creationPages[]-> {
+        _id,
+        title,
+        "slug": slug.current,
+        "excerpt": content[0].children[0].text[0..200] + "...",
+        "ogImage": content[0].asset->url
+      }, [])
     }`
   )
+  
+  console.log('Sanity result:', JSON.stringify(result, null, 2))
+  
+  return result
 }
+
+
+
 
 
 
@@ -184,4 +239,12 @@ export async function testSanityConnection() {
     console.error("Chyba při připojení k Sanity:", error);
     return false;
   }
+}
+
+export async function getPages(): Promise<{ slug: string }[]> {
+  return client.fetch(
+    groq`*[_type == "creationPage"] {
+      "slug": slug.current
+    }`
+  )
 }

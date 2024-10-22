@@ -1,48 +1,36 @@
-import { getArticles } from '../../sanity/sanity-utils'
-import { PortableText } from '@portabletext/react'
-import Image from 'next/image'
-import { Article } from '@/types/types'
+import { getArticlesPage, getArticlePreviews } from '@/sanity/sanity-utils'
+import { Suspense } from 'react'
+import { Metadata } from 'next'
+import { ArticlesList } from './components/ArticlesList'
+import { ArticlesLoading } from './components/ArticlesLoading'
 import styles from '@/styles/Articles.module.css'
 
-export default async function ArticlesPage() {
-  const articles: Article[] = await getArticles()
+export async function generateMetadata(): Promise<Metadata> {
+  const page = await getArticlesPage()
+  return {
+    title: page.seo?.metaTitle || page.title,
+    description: page.seo?.metaDescription || page.description
+  }
+}
+
+export default async function Articles() {
+  const page = await getArticlesPage()
+  const articles = page.featuredArticles && page.featuredArticles.length > 0
+    ? page.featuredArticles
+    : await getArticlePreviews()
 
   return (
-    <div>
-      <h1>Články</h1>
-      {articles.map((article: Article) => (
-        <article key={article._id}>
-          <h2>{article.title}</h2>
-          <PortableText
-            value={article.content}
-            components={{
-              types: {
-                image : ({ value }: {value: any}) => (
-                  <Image className={styles.centredImage}
-                    src={value.url}
-                    alt={value.alt || ' '}
-                    width={500}
-                    height={300}
-                  />
-                ),
-                video: ({ value }: {value: any}) => (
-                  <div>
-                    <iframe
-                      width="560"
-                      height="315"
-                      src={value.url}
-                      frameBorder="0"
-                      allow="autoplay; encrypted-media"
-                      allowFullScreen
-                    ></iframe>
-                    {value.caption && <p>{value.caption}</p>}
-                  </div>
-                ),
-              },
-            }}
-          />
-        </article>
-      ))}
+    <div className={styles.articlesGrid}>
+      <header className={styles.pageHeader}>
+        <h1>{page.title}</h1>
+        {page.description && (
+          <p className={styles.pageDescription}>{page.description}</p>
+        )}
+      </header>
+
+      <Suspense fallback={<ArticlesLoading />}>
+        <ArticlesList articles={articles} />
+      </Suspense>
     </div>
   )
 }
