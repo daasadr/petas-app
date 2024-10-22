@@ -3,14 +3,14 @@ import CustomPortableTextComponent from '../../../components/CustomPortableTextC
 import { Page } from '@/types/types'
 
 interface PageProps {
-  params: {
+  params: Promise<{
     slug: string
-  }
+  }>
 }
 
 export default async function ArticlePage(props: PageProps) {
-  // Destrukturujeme params až po jejich použití
-  const page: Page | null = await getPageBySlug(props.params.slug)
+  const params = await props.params
+  const page: Page | null = await getPageBySlug(params.slug)
 
   if (!page) return <div>Stránka nenalezena</div>
 
@@ -24,5 +24,7 @@ export default async function ArticlePage(props: PageProps) {
 
 export async function generateStaticParams() {
   const pages = await getPages()
-  return pages.map((page) => ({ slug: page.slug }))
+  return pages.map((page) => ({ 
+    slug: page.slug 
+  }))
 }

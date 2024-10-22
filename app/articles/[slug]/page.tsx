@@ -1,18 +1,19 @@
-import { getArticleBySlug } from '@/sanity/sanity-utils'
+import { getArticleBySlug, getArticlePreviews } from '@/sanity/sanity-utils'
 import { PortableText } from '@portabletext/react'
 import { Metadata } from 'next'
 import Image from 'next/image'
 import { notFound } from 'next/navigation'
 import styles from '@/styles/Articles.module.css'
 
-interface Props {
-  params: Promise<{ slug: string }>
+interface PageProps {
+  params: Promise<{
+    slug: string
+  }>
 }
 
-export async function generateMetadata(props: Props): Promise<Metadata> {
+export async function generateMetadata(props: PageProps): Promise<Metadata> {
   const params = await props.params
-  const slug = await Promise.resolve(params.slug)
-  const article = await getArticleBySlug(slug)
+  const article = await getArticleBySlug(params.slug)
   
   if (!article) return {}
   
@@ -22,15 +23,13 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
   }
 }
 
-export default async function ArticlePage(props: Props) {
+export default async function ArticlePage(props: PageProps) {
   const params = await props.params
-  const slug = await Promise.resolve(params.slug)
-  const article = await getArticleBySlug(slug)
+  const article = await getArticleBySlug(params.slug)
 
   if (!article) {
     notFound()
   }
-
 
   return (
     <article className={styles.article}>
