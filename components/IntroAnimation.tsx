@@ -9,32 +9,49 @@ const IntroAnimation = () => {
   const imageRefs = useRef<(HTMLImageElement | null)[]>([]);
 
   useEffect(() => {
-    const hasSeenAnimation = sessionStorage.getItem('hasSeenAnimation');
+    // Okamžitě nastavíme homepage jako viditelnou, ale s opacity 0
     const mainContent = document.getElementById('mainContentWrapper');
+    if (mainContent) {
+      mainContent.style.visibility = 'visible';
+      mainContent.style.opacity = '0';
+    }
 
-    // Přednačtení obrázků
-    const preloadImages = async () => {
-      const imageUrls = ['/hotField.jpg', '/hotA.jpg'];
-      const loadPromises = imageUrls.map(url => {
-        return new Promise((resolve) => {
+    const hasSeenAnimation = sessionStorage.getItem('hasSeenAnimation');
+
+    // Předběžné načtení obrázků
+    const preloadImages = () => {
+      return new Promise((resolve) => {
+        let loadedCount = 0;
+        const urls = ['/hotA.jpg', '/hotField.jpg'];
+        
+        urls.forEach(url => {
           const img = new Image();
+          img.onload = () => {
+            loadedCount++;
+            if (loadedCount === urls.length) {
+              resolve(true);
+            }
+          };
           img.src = url;
-          img.onload = () => resolve(true);
         });
       });
-
-      await Promise.all(loadPromises);
-      setImagesLoaded(true);
     };
 
-    preloadImages();
-
-    if (hasSeenAnimation) {
-      setShowAnimation(false);
-      if (mainContent) {
-        mainContent.classList.add('show-content');
+    // Inicializace
+    const init = async () => {
+      await preloadImages();
+      setImagesLoaded(true);
+      
+      if (hasSeenAnimation) {
+        setShowAnimation(false);
+        if (mainContent) {
+          mainContent.style.opacity = '1';
+          mainContent.classList.add('show-content');
+        }
       }
-    }
+    };
+
+    init();
 
     const handleKeyPress = (e: KeyboardEvent) => {
       if (e.ctrlKey && e.key === 'r') {
@@ -43,7 +60,7 @@ const IntroAnimation = () => {
         setIsAnimationStarted(false);
         sessionStorage.removeItem('hasSeenAnimation');
         if (mainContent) {
-          mainContent.classList.remove('show-content');
+          mainContent.style.opacity = '0';
         }
       }
     };
@@ -56,17 +73,34 @@ const IntroAnimation = () => {
     setIsAnimationStarted(true);
     sessionStorage.setItem('hasSeenAnimation', 'true');
     
+    // Začneme zobrazovat hlavní obsah během druhé animace
+    const mainContent = document.getElementById('mainContentWrapper');
+    if (mainContent) {
+      mainContent.style.opacity = '1';
+      mainContent.style.transition = 'opacity 1s ease-in';
+    }
+    
     setTimeout(() => {
       setShowAnimation(false);
-      const mainContent = document.getElementById('mainContentWrapper');
-      if (mainContent) {
-        mainContent.classList.add('show-content');
-      }
-    }, 7000);
+    }, 5000);
   };
 
+  // Pokud obrázky nejsou načtené, zobrazíme prázdný div se stejným pozadím jako homepage
+  if (!imagesLoaded) {
+    return (
+      <div style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        width: '100vw',
+        height: '100vh',
+        backgroundColor: '#your-background-color', // Nastavte stejnou barvu jako má vaše homepage
+        zIndex: 1000
+      }} />
+    );
+  }
+
   if (!showAnimation) return null;
-  if (!imagesLoaded) return null;
 
   return (
     <div className={styles.overlay}>
