@@ -30,10 +30,29 @@ export default async function RootLayout({
     <html lang="cs">
       <head>
         <meta charSet="utf-8" />
+        <style>{`
+          .hide-content {
+            opacity: 0;
+            transition: opacity 0.3s;
+          }
+          .show-content {
+            opacity: 1;
+          }
+        `}</style>
+        <link
+  rel="preload"
+  href="/hotField.jpg"
+  as="image"
+/>
+<link
+  rel="preload"
+  href="/hotA.jpg"
+  as="image"
+/>
       </head>
       <body>
         <ClientIntroAnimation />
-        <div className={styles.mainContent}>
+        <div id="mainContentWrapper" className="hide-content">
           <header className={styles.header}>
             <ClientDynamicNavigation items={navigationItems} />
           </header>
