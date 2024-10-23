@@ -1,20 +1,37 @@
 "use client";
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import styles from '../styles/IntroAnimation.module.css';
-import Image from 'next/image'
 
 const IntroAnimation = () => {
   const [isAnimationStarted, setIsAnimationStarted] = useState(false);
   const [showAnimation, setShowAnimation] = useState(true);
+  const [imagesLoaded, setImagesLoaded] = useState(false);
+  const imageRefs = useRef<(HTMLImageElement | null)[]>([]);
 
   useEffect(() => {
     const hasSeenAnimation = sessionStorage.getItem('hasSeenAnimation');
+    const mainContent = document.getElementById('mainContentWrapper');
+
+    // Přednačtení obrázků
+    const preloadImages = async () => {
+      const imageUrls = ['/hotField.jpg', '/hotA.jpg'];
+      const loadPromises = imageUrls.map(url => {
+        return new Promise((resolve) => {
+          const img = new Image();
+          img.src = url;
+          img.onload = () => resolve(true);
+        });
+      });
+
+      await Promise.all(loadPromises);
+      setImagesLoaded(true);
+    };
+
+    preloadImages();
+
     if (hasSeenAnimation) {
       setShowAnimation(false);
-     // Okamžitě zobrazit hlavní obsah, pokud není animace
-      const mainContent = document.getElementById('mainContentWrapper');
       if (mainContent) {
-        mainContent.classList.remove('hide-content');
         mainContent.classList.add('show-content');
       }
     }
@@ -25,11 +42,8 @@ const IntroAnimation = () => {
         setShowAnimation(true);
         setIsAnimationStarted(false);
         sessionStorage.removeItem('hasSeenAnimation');
-      // Skrýt hlavní obsah při restartu animace
-        const mainContent = document.getElementById('mainContentWrapper');
         if (mainContent) {
           mainContent.classList.remove('show-content');
-          mainContent.classList.add('hide-content');
         }
       }
     };
@@ -44,29 +58,38 @@ const IntroAnimation = () => {
     
     setTimeout(() => {
       setShowAnimation(false);
-    // Zobrazit hlavní obsah až po skončení animace
       const mainContent = document.getElementById('mainContentWrapper');
       if (mainContent) {
-        mainContent.classList.remove('hide-content');
         mainContent.classList.add('show-content');
       }
     }, 7000);
   };
 
-  if (!showAnimation) {
-    return null;
-  }
+  if (!showAnimation) return null;
+  if (!imagesLoaded) return null;
 
   return (
-    <div className={styles.overlay}>      
+    <div className={styles.overlay}>
       <div className={`${styles.layer2Container} ${isAnimationStarted ? styles.layer2Animate : ''}`}>
-        <Image src="/hotField.jpg" alt="Field" className={styles.layer2Image} priority
-  fill />
+        <img 
+          src="/hotField.jpg" 
+          alt="Field" 
+          className={styles.layer2Image}
+          ref={(el) => {
+            if (el) imageRefs.current[0] = el;
+          }}
+        />
       </div>
-
+      
       <div className={`${styles.layer1Container} ${isAnimationStarted ? styles.layer1Animate : ''}`}>
-        <Image src="/hotA.jpg" alt="Hot A" className={styles.layer1Image} priority
-  fill/>
+        <img 
+          src="/hotA.jpg" 
+          alt="Hot A" 
+          className={styles.layer1Image}
+          ref={(el) => {
+            if (el) imageRefs.current[1] = el;
+          }}
+        />
         {!isAnimationStarted && (
           <button onClick={handleStart} className={styles.enterButton}>
             ...Vstupte...

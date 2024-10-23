@@ -30,15 +30,31 @@ export default async function RootLayout({
     <html lang="cs">
       <head>
         <meta charSet="utf-8" />
-        <style>{`
-          .hide-content {
-            opacity: 0;
-            transition: opacity 0.3s;
+        <style dangerouslySetInnerHTML={{ __html: `
+          .loading {
+            display: none;
           }
-          .show-content {
-            opacity: 1;
+          
+          #mainContentWrapper {
+            display: none;
           }
-        `}</style>
+          
+          #mainContentWrapper.show-content {
+            display: block;
+          }
+          
+          .preload-images {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+          }
+        `}} />
         <link
   rel="preload"
   href="/hotField.jpg"
@@ -51,8 +67,13 @@ export default async function RootLayout({
 />
       </head>
       <body>
+        {/* Přednačtení obrázků */}
+        <div className="preload-images">
+          <img src="/hotField.jpg" alt="" />
+          <img src="/hotA.jpg" alt="" />
+        </div>
         <ClientIntroAnimation />
-        <div id="mainContentWrapper" className="hide-content">
+        <div id="mainContentWrapper" >
           <header className={styles.header}>
             <ClientDynamicNavigation items={navigationItems} />
           </header>
