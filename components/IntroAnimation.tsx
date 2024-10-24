@@ -9,31 +9,30 @@ const IntroAnimation = () => {
   const imageRefs = useRef<(HTMLImageElement | null)[]>([]);
 
   useEffect(() => {
-    // Nastavíme mainContent jako skrytý při načtení
     const mainContent = document.getElementById('mainContentWrapper');
     if (mainContent) {
       mainContent.style.visibility = 'hidden';
       mainContent.style.opacity = '0';
     }
-    
+
     // Předběžné načtení obrázků
-    const preloadImages = async () => {
-      const urls = ['/hotA.jpg', '/hotField.jpg'];
-      try {
-        await Promise.all(
-          urls.map(url => {
-            return new Promise((resolve, reject) => {
-              const img = new Image();
-              img.onload = resolve;
-              img.onerror = reject;
-              img.src = url;
-            });
-          })
-        );
-        setImagesLoaded(true);
-      } catch (error) {
-        console.error('Failed to load images:', error);
-      }
+    const preloadImages = () => {
+      return new Promise((resolve) => {
+        let loadedCount = 0;
+        const urls = ['/hotA.jpg', '/hotField.jpg'];
+        
+        urls.forEach(url => {
+          const img = new Image();
+          img.onload = () => {
+            loadedCount++;
+            if (loadedCount === urls.length) {
+              setImagesLoaded(true);
+              resolve(true);
+            }
+          };
+          img.src = url;
+        });
+      });
     };
 
     preloadImages();
@@ -43,7 +42,6 @@ const IntroAnimation = () => {
     setIsAnimationStarted(true);
     sessionStorage.setItem('hasSeenAnimation', 'true');
 
-    // Začneme zobrazovat hlavní obsah až po dokončení animace
     setTimeout(() => {
       const mainContent = document.getElementById('mainContentWrapper');
       if (mainContent) {
@@ -51,25 +49,18 @@ const IntroAnimation = () => {
         mainContent.style.opacity = '1';
         mainContent.style.transition = 'opacity 1s ease-in';
       }
-    }, 4500); // Načasování těsně před koncem animace
+    }, 4500);
 
     setTimeout(() => {
       setShowAnimation(false);
-    }, 5000);
+    }, 4000);
   };
 
-  // Pokud obrázky nejsou načtené, zobrazíme prázdný div se stejným pozadím jako homepage
   if (!imagesLoaded) {
     return (
-      <div style={{
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        width: '100vw',
-        height: '100vh',
-        backgroundColor: '#your-background-color', // Nastavte stejnou barvu jako má vaše homepage
-        zIndex: 1000
-      }} />
+      <div className={styles.overlay}>
+        {/* Můžete přidat loading indikátor pokud chcete */}
+      </div>
     );
   }
 
@@ -78,20 +69,20 @@ const IntroAnimation = () => {
   return (
     <div className={styles.overlay}>
       <div className={`${styles.layer2Container} ${isAnimationStarted ? styles.layer2Animate : ''}`}>
-        <img 
-          src="/hotField.jpg" 
-          alt="Field" 
+        <img
+          src="/hotField.jpg"
+          alt="Field"
           className={styles.layer2Image}
           ref={(el) => {
             if (el) imageRefs.current[0] = el;
           }}
         />
       </div>
-      
+
       <div className={`${styles.layer1Container} ${isAnimationStarted ? styles.layer1Animate : ''}`}>
-        <img 
-          src="/hotA.jpg" 
-          alt="Hot A" 
+        <img
+          src="/hotA.jpg"
+          alt="Hot A"
           className={styles.layer1Image}
           ref={(el) => {
             if (el) imageRefs.current[1] = el;
