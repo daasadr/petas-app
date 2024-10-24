@@ -9,77 +9,50 @@ const IntroAnimation = () => {
   const imageRefs = useRef<(HTMLImageElement | null)[]>([]);
 
   useEffect(() => {
-    // Okamžitě nastavíme homepage jako viditelnou, ale s opacity 0
+    // Nastavíme mainContent jako skrytý při načtení
     const mainContent = document.getElementById('mainContentWrapper');
     if (mainContent) {
-      mainContent.style.visibility = 'visible';
+      mainContent.style.visibility = 'hidden';
       mainContent.style.opacity = '0';
     }
-
-    const hasSeenAnimation = sessionStorage.getItem('hasSeenAnimation');
-
+    
     // Předběžné načtení obrázků
-    const preloadImages = () => {
-      return new Promise((resolve) => {
-        let loadedCount = 0;
-        const urls = ['/hotA.jpg', '/hotField.jpg'];
-        
-        urls.forEach(url => {
-          const img = new Image();
-          img.onload = () => {
-            loadedCount++;
-            if (loadedCount === urls.length) {
-              resolve(true);
-            }
-          };
-          img.src = url;
-        });
-      });
-    };
-
-    // Inicializace
-    const init = async () => {
-      await preloadImages();
-      setImagesLoaded(true);
-      
-      if (hasSeenAnimation) {
-        setShowAnimation(false);
-        if (mainContent) {
-          mainContent.style.opacity = '1';
-          mainContent.classList.add('show-content');
-        }
+    const preloadImages = async () => {
+      const urls = ['/hotA.jpg', '/hotField.jpg'];
+      try {
+        await Promise.all(
+          urls.map(url => {
+            return new Promise((resolve, reject) => {
+              const img = new Image();
+              img.onload = resolve;
+              img.onerror = reject;
+              img.src = url;
+            });
+          })
+        );
+        setImagesLoaded(true);
+      } catch (error) {
+        console.error('Failed to load images:', error);
       }
     };
 
-    init();
-
-    const handleKeyPress = (e: KeyboardEvent) => {
-      if (e.ctrlKey && e.key === 'r') {
-        e.preventDefault();
-        setShowAnimation(true);
-        setIsAnimationStarted(false);
-        sessionStorage.removeItem('hasSeenAnimation');
-        if (mainContent) {
-          mainContent.style.opacity = '0';
-        }
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyPress);
-    return () => window.removeEventListener('keydown', handleKeyPress);
+    preloadImages();
   }, []);
 
   const handleStart = () => {
     setIsAnimationStarted(true);
     sessionStorage.setItem('hasSeenAnimation', 'true');
-    
-    // Začneme zobrazovat hlavní obsah během druhé animace
-    const mainContent = document.getElementById('mainContentWrapper');
-    if (mainContent) {
-      mainContent.style.opacity = '1';
-      mainContent.style.transition = 'opacity 1s ease-in';
-    }
-    
+
+    // Začneme zobrazovat hlavní obsah až po dokončení animace
+    setTimeout(() => {
+      const mainContent = document.getElementById('mainContentWrapper');
+      if (mainContent) {
+        mainContent.style.visibility = 'visible';
+        mainContent.style.opacity = '1';
+        mainContent.style.transition = 'opacity 1s ease-in';
+      }
+    }, 4500); // Načasování těsně před koncem animace
+
     setTimeout(() => {
       setShowAnimation(false);
     }, 5000);

@@ -31,46 +31,41 @@ export default async function RootLayout({
       <head>
         <meta charSet="utf-8" />
         <style dangerouslySetInnerHTML={{ __html: `
-          .loading {
-            display: none;
-          }
-          
-          #mainContentWrapper {
-            display: none;
-          }
-          
-          #mainContentWrapper.show-content {
-            display: block;
-          }
-          
-          .preload-images {
-            position: absolute;
-            width: 1px;
-            height: 1px;
-            padding: 0;
-            margin: -1px;
-            overflow: hidden;
-            clip: rect(0, 0, 0, 0);
-            white-space: nowrap;
-            border: 0;
-          }
-        `}} />
-        <link
-  rel="preload"
-  href="/hotField.jpg"
-  as="image"
-/>
-<link
-  rel="preload"
-  href="/hotA.jpg"
-  as="image"
-/>
+        #mainContentWrapper {
+          visibility: hidden;
+          opacity: 0;
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          z-index: 1;
+          transition: opacity 1s ease-in;
+        }
+
+        .show-content {
+          visibility: visible !important;
+          opacity: 1 !important;
+          z-index: 1001 !important;
+        }
+
+        .loading-overlay {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100vw;
+          height: 100vh;
+          background-color: #121212;
+          z-index: 2000;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+      `}} />
       </head>
       <body>
         {/* Přednačtení obrázků */}
-        <div className="preload-images">
-          <img src="/hotField.jpg" alt="" />
-          <img src="/hotA.jpg" alt="" />
+        <div className="loading-overlay" id="loadingOverlay">
         </div>
         <ClientIntroAnimation />
         <div id="mainContentWrapper" >
