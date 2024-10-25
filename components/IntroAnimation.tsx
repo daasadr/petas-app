@@ -5,37 +5,46 @@ import styles from '../styles/IntroAnimation.module.css';
 const IntroAnimation = () => {
   const [isAnimationStarted, setIsAnimationStarted] = useState(false);
   const [showAnimation, setShowAnimation] = useState(true);
-  const [imagesLoaded, setImagesLoaded] = useState(false);
+  const [isReady, setIsReady] = useState(false);
   const imageRefs = useRef<(HTMLImageElement | null)[]>([]);
 
   useEffect(() => {
+    const loadImages = async () => {
+      try {
+        const imageUrls = ['/hotA.jpg', '/hotField.jpg'];
+        await Promise.all(
+          imageUrls.map(
+            url =>
+              new Promise((resolve, reject) => {
+                const img = new Image();
+                img.onload = resolve;
+                img.onerror = reject;
+                img.src = url;
+              })
+          )
+        );
+        setIsReady(true);
+      } catch (error) {
+        console.error('Failed to load images:', error);
+        setIsReady(true); // Fallback v případě chyby
+      }
+    };
+
+    loadImages();
+
     const mainContent = document.getElementById('mainContentWrapper');
     if (mainContent) {
       mainContent.style.visibility = 'hidden';
       mainContent.style.opacity = '0';
     }
 
-    // Předběžné načtení obrázků
-    const preloadImages = () => {
-      return new Promise((resolve) => {
-        let loadedCount = 0;
-        const urls = ['/hotA.jpg', '/hotField.jpg'];
-        
-        urls.forEach(url => {
-          const img = new Image();
-          img.onload = () => {
-            loadedCount++;
-            if (loadedCount === urls.length) {
-              setImagesLoaded(true);
-              resolve(true);
-            }
-          };
-          img.src = url;
-        });
-      });
+    return () => {
+      const mainContent = document.getElementById('mainContentWrapper');
+      if (mainContent) {
+        mainContent.style.visibility = 'visible';
+        mainContent.style.opacity = '1';
+      }
     };
-
-    preloadImages();
   }, []);
 
   const handleStart = () => {
@@ -47,7 +56,6 @@ const IntroAnimation = () => {
       if (mainContent) {
         mainContent.style.visibility = 'visible';
         mainContent.style.opacity = '1';
-        mainContent.style.transition = 'opacity 1s ease-in';
       }
     }, 4500);
 
@@ -56,15 +64,7 @@ const IntroAnimation = () => {
     }, 4000);
   };
 
-  if (!imagesLoaded) {
-    return (
-      <div className={styles.overlay}>
-        {/* Můžete přidat loading indikátor pokud chcete */}
-      </div>
-    );
-  }
-
-  if (!showAnimation) return null;
+  if (!isReady || !showAnimation) return null;
 
   return (
     <div className={styles.overlay}>
@@ -73,23 +73,23 @@ const IntroAnimation = () => {
           src="/hotField.jpg"
           alt="Field"
           className={styles.layer2Image}
-          ref={(el) => {
-            if (el) imageRefs.current[0] = el;
-          }}
+          ref={(el) => { imageRefs.current[0] = el; }}
         />
       </div>
-
+      
       <div className={`${styles.layer1Container} ${isAnimationStarted ? styles.layer1Animate : ''}`}>
         <img
           src="/hotA.jpg"
           alt="Hot A"
           className={styles.layer1Image}
-          ref={(el) => {
-            if (el) imageRefs.current[1] = el;
-          }}
+          ref={(el) => { imageRefs.current[1] = el; }}
         />
         {!isAnimationStarted && (
-          <button onClick={handleStart} className={styles.enterButton}>
+          <button
+            onClick={handleStart}
+            className={styles.enterButton}
+            style={{ opacity: isReady ? 1 : 0 }}
+          >
             ...Vstupte...
           </button>
         )}
