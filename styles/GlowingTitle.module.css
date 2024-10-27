@@ -13,7 +13,7 @@
 
 .glowingTitle {
     font-family: 'Reggae One';
-    font-size: 5.5rem;
+    font-size: 4.5rem;
     line-height: 1;
     position: relative;
     color: transparent;
@@ -65,6 +65,52 @@
     opacity: 0.5;
     transform: scale(1.05) blur(2px);
     filter: blur(4px);
+}
+
+/* Mobilní zobrazení */
+@media (max-width: 768px) {
+    .titleWrapper {
+        justify-content: flex-start;
+        padding-left: 1rem;
+        height: 2cm;
+        padding-top: 0.5rem;
+    }
+
+    .glowingTitle {
+        font-size: 1.8rem;
+        -webkit-text-stroke: 1.5px #ff4400;
+    }
+
+    .glowingTitle::before {
+        -webkit-text-stroke: 3px #ff4400;
+    }
+
+    /* Upravený hover efekt pro dotykové obrazovky */
+    .glowingTitle:hover {
+        transform: scale(1.01);
+        /* Menší zvětšení na mobilech */
+    }
+
+    .glowingTitle:hover::before {
+        transform: scale(1.02) blur(2px);
+    }
+}
+
+/* Ještě menší obrazovky */
+@media (max-width: 480px) {
+    .titleWrapper {
+        padding-left: 0.8rem;
+        height: 1.8cm;
+    }
+
+    .glowingTitle {
+        font-size: 1.5rem;
+        -webkit-text-stroke: 1px #ff4400;
+    }
+
+    .glowingTitle::before {
+        -webkit-text-stroke: 2px #ff4400;
+    }
 }
 
 @keyframes textGlow {
