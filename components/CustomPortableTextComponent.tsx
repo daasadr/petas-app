@@ -3,6 +3,7 @@ import { PortableTextBlock, ImageAsset, FileAsset } from 'sanity'
 import Image from 'next/image'
 import React from 'react'
 import { urlFor } from '../sanity/sanity-utils'
+import '../styles/globals.css';
 
 type ImageBlock = {
   _type: 'image'
@@ -33,6 +34,12 @@ const CustomPortableTextComponent = ({ value }: { value: Array<ContentBlock> }) 
                 alt="Obrázek" 
                 width={500} 
                 height={300}
+                style={{
+                  width: '100%',
+                  height: 'auto',
+                  maxHeight: '70vh', // Maximální výška vzhledem k výšce viewportu
+                  objectFit: 'contain',
+                }}
               />
             </div>
           )
@@ -46,8 +53,15 @@ const CustomPortableTextComponent = ({ value }: { value: Array<ContentBlock> }) 
         
         const videoUrl = value.url;
         return (
-          <div>
-            <video controls src={videoUrl}>
+          <div className='centred-image'>
+            <video 
+              controls 
+              src={videoUrl}
+              style={{
+                maxWidth: '100%',
+                height: 'auto',
+              }}
+            >
               Váš prohlížeč nepodporuje přehrávání videa.
             </video>
           </div>

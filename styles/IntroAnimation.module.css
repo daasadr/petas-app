@@ -1,3 +1,9 @@
+.visible {
+    opacity: 1 !important;
+    visibility: visible !important;
+    position: relative !important;
+    overflow: auto !important;
+}
 .overlay {
     position: fixed;
     top: 0;

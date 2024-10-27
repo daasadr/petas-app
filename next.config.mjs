@@ -1,6 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
     
+ 
+
     reactStrictMode: true,
     images: {
         remotePatterns: [{
@@ -25,6 +27,8 @@ const nextConfig = {
     // během vývoje můžete nastavit na true, pro produkci na false
     ignoreDuringBuilds: true,
   },
+ 
+
 };
 
 export default nextConfig;

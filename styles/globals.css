@@ -1,56 +1,65 @@
-body,
-html {
+/* globals.css */
+* {
   margin: 0;
   padding: 0;
-  height: 100%;
-  font-family: Arial, sans-serif;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
   background-color: #121212;
   color: #ffffff;
-  position: relative;
-}
-
-.layoutContainer {
-  position: relative;
-  z-index: 1;
-}
-
-.mainContent {
-  position: relative;
-  z-index: 2;
-}
-#mainContentWrapper {
-  position: fixed;
-  top: 0;
-  left: 0;
+  min-height: 100vh;
   width: 100%;
-  height: 100%;
-  visibility: hidden;
- 
-  z-index: 1;
 }
 
-.show-content {
- 
-  z-index: 1001 !important;
-}
-.loading-overlay {
-  opacity: 1;
-  transition: opacity 0.5s ease-out;
-}
-
-.loading-overlay.hidden {
-  opacity: 0;
-  pointer-events: none;
+body {
+  overflow-x: hidden;
 }
 
 #mainContentWrapper {
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 1s ease-in, visibility 0s linear 1s;
+  width: 100%;
+  min-height: 100vh;
+  background-color: #121212;
+  transition: opacity 1s ease-in-out, visibility 1s ease-in-out;
 }
 
-#mainContentWrapper.visible {
-  opacity: 1;
-  visibility: visible;
-  transition: opacity 1s ease-in;
+/* Základní nastavení pro všechny stránky kromě homepage */
+body:not(.homepage) #mainContentWrapper {
+  position: relative !important;
+  overflow-y: auto !important;
+  height: auto !important;
+}
+
+/* Mobilní zařízení */
+@media (max-width: 768px) {
+  #mainContentWrapper {
+    position: relative !important;
+    overflow-y: auto !important;
+    height: auto !important;
+  }
+}
+
+/* Desktop homepage */
+@media (min-width: 769px) {
+  body.homepage #mainContentWrapper {
+    position: fixed;
+    overflow: hidden;
+    height: 100vh;
+  }
+}
+
+/* Zajistíme, že obsah bude scrollovatelný na podstránkách */
+.main {
+  min-height: 100vh;
+  width: 100%;
+  position: relative;
+}
+
+/* Přidáme třídu pro viditelnost */
+.visible {
+  visibility: visible !important;
+  opacity: 1 !important;
 }

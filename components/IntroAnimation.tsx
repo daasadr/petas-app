@@ -1,4 +1,5 @@
 "use client";
+
 import { useEffect, useState, useRef } from 'react';
 import styles from '../styles/IntroAnimation.module.css';
 
@@ -9,6 +10,13 @@ const IntroAnimation = () => {
   const imageRefs = useRef<(HTMLImageElement | null)[]>([]);
 
   useEffect(() => {
+    // Skryjeme hlavní obsah při načtení
+    const mainContent = document.getElementById('mainContentWrapper');
+    if (mainContent) {
+      mainContent.style.visibility = 'hidden';
+      mainContent.style.opacity = '0';
+    }
+
     const loadImages = async () => {
       try {
         const imageUrls = ['/hotA.jpg', '/hotField.jpg'];
@@ -26,25 +34,11 @@ const IntroAnimation = () => {
         setIsReady(true);
       } catch (error) {
         console.error('Failed to load images:', error);
-        setIsReady(true); // Fallback v případě chyby
+        setIsReady(true);
       }
     };
 
     loadImages();
-
-    const mainContent = document.getElementById('mainContentWrapper');
-    if (mainContent) {
-      mainContent.style.visibility = 'hidden';
-      mainContent.style.opacity = '0';
-    }
-
-    return () => {
-      const mainContent = document.getElementById('mainContentWrapper');
-      if (mainContent) {
-        mainContent.style.visibility = 'visible';
-        mainContent.style.opacity = '1';
-      }
-    };
   }, []);
 
   const handleStart = () => {
@@ -56,15 +50,29 @@ const IntroAnimation = () => {
       if (mainContent) {
         mainContent.style.visibility = 'visible';
         mainContent.style.opacity = '1';
+        
+        // Nastavení stylu podle typu stránky a zařízení
+        const isHomePage = window.location.pathname === '/';
+        const isMobile = window.innerWidth <= 768;
+        
+        if (isHomePage && !isMobile) {
+          mainContent.style.position = 'fixed';
+          mainContent.style.overflow = 'hidden';
+        } else {
+          mainContent.style.position = 'relative';
+          mainContent.style.overflow = 'auto';
+          mainContent.style.height = 'auto';
+          mainContent.style.minHeight = '100vh';
+        }
       }
-    }, 4500);
+    }, 3500);
 
     setTimeout(() => {
       setShowAnimation(false);
     }, 4000);
   };
 
-  if (!isReady || !showAnimation) return null;
+  if (!showAnimation) return null;
 
   return (
     <div className={styles.overlay}>

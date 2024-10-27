@@ -10,7 +10,12 @@ export interface NavigationProps {
 }
 
 export default function Navigation({ items, className }: NavigationProps) {
-  if (!items || items.length === 0) {
+  // Odfiltrujeme položku homepage
+  const filteredItems = items.filter(item => 
+    !(item.linkType === 'internal' && item.link === '/')
+  );
+
+  if (!filteredItems || filteredItems.length === 0) {
     return <nav className={className}>No navigation items available</nav>;
   }
 
@@ -19,10 +24,14 @@ export default function Navigation({ items, className }: NavigationProps) {
       <div className={styles.navBackground}>
         <div className={styles.navCircle}>
           <div className={styles.navItems}>
-            {items.map((item) => {
+            {filteredItems.map((item) => {
               if (item.linkType === 'internal' && item.link) {
                 return (
-                  <Link key={item._id} href={item.link} className={styles.navItem}>
+                  <Link 
+                    key={item._id} 
+                    href={item.link} 
+                    className={styles.navItem}
+                  >
                     <span className={styles.navText}>{item.title || 'Unnamed Item'}</span>
                   </Link>
                 );

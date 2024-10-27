@@ -1,6 +1,7 @@
 'use client'
 
-import React from 'react'
+import React, { useEffect } from 'react'
+import { usePathname } from 'next/navigation'
 import styles from '@/styles/Layout.module.css'
 import ClientDynamicNavigation from '@/components/ClientDynamicNavigation'
 import ClientSparkEffect from '@/components/ClientSparkeffectComponent'
@@ -13,10 +14,29 @@ const DynamicIntroLoader = dynamic(
 
 interface LayoutClientProps {
   children: React.ReactNode;
-  navigationItems: any; // Upravte typ podle vaší implementace
+  navigationItems: any;
 }
 
 export default function LayoutClient({ children, navigationItems }: LayoutClientProps) {
+  const pathname = usePathname()
+  
+  useEffect(() => {
+    // Přidáme třídu na body podle typu stránky
+    const isHomePage = pathname === '/'
+    document.body.classList.remove('homepage', 'not-homepage')
+    document.body.classList.add(isHomePage ? 'homepage' : 'not-homepage')
+    
+    // Zajistíme správné nastavení scrollování pro podstránky
+    if (!isHomePage) {
+      const mainContent = document.getElementById('mainContentWrapper')
+      if (mainContent) {
+        mainContent.style.position = 'relative'
+        mainContent.style.overflow = 'auto'
+        mainContent.style.height = 'auto'
+      }
+    }
+  }, [pathname])
+
   return (
     <>
       <DynamicIntroLoader />
@@ -33,5 +53,5 @@ export default function LayoutClient({ children, navigationItems }: LayoutClient
       </div>
       <ClientSparkEffect />
     </>
-  );
+  )
 }
