@@ -1,6 +1,7 @@
 import { PortableTextBlock, ImageAsset,  FileAsset } from 'sanity'
 
 export interface Slug {
+  _type: "slug";
   current: string;
 }
 export interface MenuItem {
@@ -21,7 +22,43 @@ export interface HomePage {
 }
 
 
+export interface ImagePreview {
+  url: string;
+  alt?: string;
+}
 
+export interface Image extends ImagePreview {
+  caption?: string;
+}
+
+export interface Video {
+  _type: 'video';
+  url: string;
+  caption?: string;
+}
+
+// Základní rozhraní pro společné vlastnosti článků
+interface BaseArticle {
+  _id: string;
+  title: string;
+  excerpt?: string;
+}
+
+// Rozhraní pro náhled článku v gridu
+export interface Article extends BaseArticle {
+  slug: string;
+  ogImage?: string;
+}
+
+// Rozhraní pro preview článku z Sanity
+export interface ArticlePreview extends BaseArticle {
+  slug: Slug;
+  publishedAt: string;
+  author: string;
+  mainImage?: ImagePreview;
+}
+
+// Rozhraní pro plnou stránku článku
 export interface ArticlePage {
   _type: 'articlePage';
   _id: string;
@@ -29,30 +66,25 @@ export interface ArticlePage {
   slug: Slug;
   publishedAt: string;
   author: string;
-  mainImage?: Image;
+  mainImage?: {
+    url: string;
+    alt?: string;
+    caption?: string;
+  };
   excerpt?: string;
   content: (PortableTextBlock | Image | Video)[];
   tags: string[];
   seo?: SeoMetadata;
 }
 
+// Rozhraní pro stránku se seznamem článků
 export interface Articles {
-  featuredArticles: [];
   _type: 'articlesPage';
   title: string;
   description?: string;
   articlesPerPage: number;
+  featuredArticles: ArticlePreview[];
   seo?: SeoMetadata;
-}
-
-export interface ArticlePreview {
-  _id: string;
-  title: string;
-  slug: Slug;
-  publishedAt: string;
-  author: string;
-  mainImage?: ImagePreview;  // použijeme ImagePreview místo Image
-  excerpt?: string;
 }
 
 export interface ContactPage {
@@ -108,16 +140,7 @@ export interface Image {
   alt?: string;
   caption?: string;
 }
-export interface ImagePreview {
-  url: string;
-  alt?: string;
-}
 
-export interface Video {
-  _type: 'video';
-  url: string;
-  caption?: string;
-}
 export interface MyStory {
   _type: 'myStory'
   title: string

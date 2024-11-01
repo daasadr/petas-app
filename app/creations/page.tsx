@@ -1,43 +1,60 @@
-
 import Image from 'next/image'
 import Link from 'next/link'
 import { getCreations } from '@/sanity/sanity-utils'
-import { Creations } from '@/types/types'
+import styles from '@/styles/Grid.module.css'
+
+interface CreationPage {
+  _id: string;
+  title: string;
+  slug: string;
+  excerpt?: string;
+  ogImage?: string;
+}
+
+interface Creations {
+  title?: string;
+  pages?: CreationPage[];
+}
 
 export default async function CreationsPage() {
   const creations: Creations | null = await getCreations()
 
-  console.log('Creations:', JSON.stringify(creations, null, 2))
-
   if (!creations) {
     return <div>Načítání dat se nezdařilo.</div>
   }
-  console.log('Creations pages:', creations.pages)
-  
+
   return (
-    <div>
-      <h1>{creations.title || 'Moje tvorba'}</h1>
-      {creations.pages && creations.pages.length > 0 ? (
-        creations.pages.map((page) => (
-          <article key={page._id}>
-            <h2>{page.title}</h2>
+    <div className={styles.pageGrid}>
+      <header className={styles.pageHeader}>
+        <h1>{creations.title || 'Moje tvorba'}</h1>
+      </header>
+      
+      <div className={styles.gridList}>
+        {creations.pages?.map((page) => (
+          <article key={page._id} className={styles.gridCard}>
             {page.ogImage && (
-              <Image
-                src={page.ogImage}
-                alt={page.title}
-                width={500}
-                height={300}
-              />
+              <div className={styles.cardImage}>
+                <Image
+                  src={page.ogImage}
+                  alt={page.title}
+                  fill
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                  priority
+                />
+              </div>
             )}
-            <p>{page.excerpt}</p>
-            <Link href={`/creations/${page.slug}`}>
-              Přejít na článek
-            </Link>
+            <div className={styles.cardContent}>
+              <h2 className={styles.cardTitle}>{page.title}</h2>
+              {page.excerpt && (
+                <p className={styles.cardExcerpt}>{page.excerpt}</p>
+              )}
+              <Link href={`/creations/${page.slug}`} className={styles.cardLink}>
+                Přejít na článek
+              </Link>
+            </div>
           </article>
-        ))
-      ) : (
-        <p>Žádné články k zobrazení.</p>
-      )}
+        ))}
+      </div>
     </div>
   )
 }

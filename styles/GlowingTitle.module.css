@@ -1,19 +1,42 @@
-.titleWrapper {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    height: 2.5cm;
-    padding-top: 1rem;
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: 10;
+.linkWrapper {
+    text-decoration: none;
+    display: block;
 }
 
+.titleWrapper {
+    display: flex;
+    align-items: center;
+    z-index: 1000;
+}
+
+/* Styles for homepage title */
+.homepageTitle {
+    justify-content: center;
+    width: 100%;
+    padding-top: 1.5rem;
+    /* Zmenšený padding nahoře */
+    
+}
+
+/* Styles for subpage title */
+.subpageTitle {
+    position: relative;
+    left: 20px;
+    top: 20px;
+    width: auto;
+    background-color: #121212;
+    /* Přidané pozadí */
+    padding: 5px 10px;
+    border-radius: 4px;
+    z-index: 1000;
+}
+/* Přidej margin-top pro content na podstránkách */
+body:not(.homepage) #mainContentWrapper main {
+    margin-top: 60px;
+    /* Uprav podle výšky vašeho nadpisu */
+}
 .glowingTitle {
     font-family: 'Reggae One';
-    font-size: 4.5rem;
     line-height: 1;
     position: relative;
     color: transparent;
@@ -24,29 +47,27 @@
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-stroke: 2px #ff4400;
-    filter: brightness(1);
+    filter: brightness(1.2);
     transition: all 0.3s ease;
     cursor: pointer;
+    margin: 0;
+    padding: 0;
 }
 
-.glowingTitle::before {
-    content: 'ARCANA KNIFE';
-    position: absolute;
-    left: 0;
-    top: 0;
-    z-index: -1;
-    background: linear-gradient(180deg,
-            #ff9966 0%,
-            #ff6600 50%,
-            #ff4400 100%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-stroke: 4px #ff4400;
-    opacity: 0;
-    transition: all 0.3s ease;
-    color: transparent;
+/* Homepage title styles */
+.homepageGlowingTitle {
+    font-size: 4.5rem;
 }
 
+/* Subpage title styles */
+.subpageGlowingTitle {
+    position:relative;
+    font-size: 1.2rem;
+    -webkit-text-stroke: 1px #ff4400;
+    padding: 0.5rem;
+}
+
+/* Enhanced hover effects */
 .glowingTitle:hover {
     background: linear-gradient(180deg,
             #ffcc00 0%,
@@ -55,70 +76,51 @@
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-stroke: 2px #ff6600;
+    filter: brightness(1.5);
     text-shadow:
-        0 0 3px rgba(255, 102, 0, 0.8),
-        0 0 6px rgba(255, 68, 0, 0.6);
-    transform: scale(1.02);
+        0 0 5px rgba(255, 102, 0, 0.9),
+        0 0 10px rgba(255, 102, 0, 0.7),
+        0 0 15px rgba(255, 102, 0, 0.5),
+        0 0 20px rgba(255, 102, 0, 0.3);
+    transform: scale(1.03);
 }
 
-.glowingTitle:hover::before {
-    opacity: 0.5;
-    transform: scale(1.05) blur(2px);
-    filter: blur(4px);
-}
-
-/* Mobilní zobrazení */
+/* Mobile styles */
 @media (max-width: 768px) {
-    .titleWrapper {
+    .homepageTitle {
         justify-content: flex-start;
-        padding-left: 1rem;
-        height: 2cm;
-        padding-top: 0.5rem;
+        padding-left: 20px;
+        padding-top: 0.3rem;
+        position: relative;
+    }
+ .content-box .glowingTitle {
+     display: none;
+ }
+    .homepageGlowingTitle {
+        font-size: 2rem;
     }
 
-    .glowingTitle {
-        font-size: 1.8rem;
-        -webkit-text-stroke: 1.5px #ff4400;
+    .subpageTitle {
+        left: 10px;
+        top: 10px;
     }
 
-    .glowingTitle::before {
-        -webkit-text-stroke: 3px #ff4400;
-    }
-
-    /* Upravený hover efekt pro dotykové obrazovky */
-    .glowingTitle:hover {
-        transform: scale(1.01);
-        /* Menší zvětšení na mobilech */
-    }
-
-    .glowingTitle:hover::before {
-        transform: scale(1.02) blur(2px);
+    .subpageGlowingTitle {
+        position: relative;
+            
+        font-size: 1rem;
+        padding: 0.3rem;
     }
 }
 
-/* Ještě menší obrazovky */
+/* Even smaller screens */
 @media (max-width: 480px) {
-    .titleWrapper {
-        padding-left: 0.8rem;
-        height: 1.8cm;
+    .homepageGlowingTitle {
+        font-size: 1.8rem;
     }
 
-    .glowingTitle {
-        font-size: 1.5rem;
-        -webkit-text-stroke: 1px #ff4400;
-    }
-
-    .glowingTitle::before {
-        -webkit-text-stroke: 2px #ff4400;
-    }
-}
-
-@keyframes textGlow {
-    0% {
-        filter: brightness(1);
-    }
-
-    100% {
-        filter: brightness(1.2);
+    .subpageGlowingTitle {
+        font-size: 0.9rem;
+        padding: 0.2rem;
     }
 }

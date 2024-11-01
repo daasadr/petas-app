@@ -1,15 +1,146 @@
-.centeredImage {
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-    max-width: 80%;
-    text-align: center;
-    /* Pro případné inline elementy uvnitř */
+.article {
+    max-width: 900px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background: #1a1a1a;
+    color: #ffb366;
+    font-family: "Noto Sans JP", sans-serif;
+    border: 1px solid #ff8533;
+    box-shadow: 0 4px 15px rgba(255, 133, 51, 0.1);
 }
 
-.centered-image img {
-    display: inline-block;
-    /* Nebo 'block', pokud je to potřeba */
-    margin: 0 auto;
-    /* Další způsob, jak zajistit centrování */
+.header {
+    text-align: center;
+    margin-bottom: 3rem;
+    padding-bottom: 2rem;
+    border-bottom: 2px solid #ff8533;
+    background-image: linear-gradient(45deg, transparent 20%, rgba(255, 133, 51, 0.1) 50%, transparent 80%);
+}
+
+.header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    font-weight: 300;
+    letter-spacing: 0.1em;
+    color: #ff8533;
+}
+
+.metadata {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    font-size: 0.9rem;
+    color: #ffd9b3;
+}
+
+.author {
+    position: relative;
+}
+
+.author::before {
+    content: "•";
+    position: absolute;
+    left: -1rem;
+}
+
+.mainImage {
+    margin: 2rem 0;
+    width: 100%;
+}
+
+.image {
+    width: 100%;
+    height: auto;
+    border-radius: 4px;
+    box-shadow: 0 4px 20px rgba(255, 133, 51, 0.2);
+}
+
+.caption {
+    text-align: center;
+    margin-top: 0.5rem;
+    font-size: 0.9rem;
+    color: #ffd9b3;
+    font-style: italic;
+}
+
+.content {
+    line-height: 1.8;
+    font-size: 1.1rem;
+}
+
+.content p {
+    margin-bottom: 1.5rem;
+}
+
+.content a {
+    color: #9acd32;
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.3s ease;
+}
+
+.content a:hover {
+    border-bottom-color: #9acd32;
+}
+
+.contentImage {
+    margin: 2rem 0;
+}
+
+.videoWrapper {
+    position: relative;
+    padding-bottom: 56.25%;
+    margin: 2rem 0;
+}
+
+.videoWrapper iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 4px;
+}
+
+.tags {
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 2px solid #ff8533;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+}
+
+.tag {
+    padding: 0.4rem 1rem;
+    background: rgba(255, 133, 51, 0.1);
+    border: 1px solid #ff8533;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    color: #ffd9b3;
+    transition: all 0.3s ease;
+}
+
+.tag:hover {
+    background: rgba(255, 133, 51, 0.2);
+    transform: translateY(-2px);
+}
+
+/* Animace pro interaktivní prvky */
+@keyframes pulseGlow {
+    0% {
+        box-shadow: 0 0 5px rgba(255, 133, 51, 0.1);
+    }
+
+    50% {
+        box-shadow: 0 0 15px rgba(255, 133, 51, 0.2);
+    }
+
+    100% {
+        box-shadow: 0 0 5px rgba(255, 133, 51, 0.1);
+    }
+}
+
+.article:hover {
+    animation: pulseGlow 2s infinite;
 }

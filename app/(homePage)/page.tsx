@@ -12,7 +12,7 @@ export default async function Home() {
   return (
     <div className={styles.homepageRoot}>
       <div className={styles.homepageContainer}>
-        <GlowingTitle />  {/* Přesunuto nad frame */}
+        <GlowingTitle isMainHomeTitle={true} /> {/* Přidáme prop pro hlavní homepage title */}
         <div className={styles.frame}>
           <div className={styles.innerFrame}>
             <div className={styles.contentBlock + ' ' + styles.contentBlockLeft}>

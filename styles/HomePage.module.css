@@ -33,17 +33,17 @@
     font-family: 'Noto Serif JP', system-ui, -apple-system, sans-serif;
     overflow: hidden;
     z-index: 1;
-    border-radius: var(--border-radius);
-    box-shadow:
-        0 5px 15px rgba(0, 0, 0, 0.5),
-        inset 0 2px 5px rgba(255, 255, 255, 0.1);
+    
+        
+        
 }
 
 .frame {
     position: relative;
     width: 100%;
     height: 100%;
-    padding-top: 8.5rem;
+    padding-top: 2rem;
+    padding: 3.5rem;
     box-sizing: border-box;
 }
 
@@ -62,8 +62,8 @@
 .contentBlock {
     flex: 1;
     height: calc(100% - (var(--content-padding) * 2));
-    background-color: var(--content-bg);
-    border-radius: var(--border-radius);
+    background-color: #121212;
+    border-radius: 80px;
     padding: var(--content-padding);
     display: flex;
     flex-direction: column;
@@ -72,10 +72,10 @@
     overflow-x: hidden;
     position: relative;
     box-shadow:
-        inset 0 4px 12px rgba(0, 0, 0, 0.6),
-        inset 0 -2px 6px rgba(0, 0, 0, 0.6),
-        inset 2px 0 8px rgba(0, 0, 0, 0.6),
-        inset -2px 0 8px rgba(0, 0, 0, 0.6);
+        inset 0 14px 22px rgba(0, 0, 0, 0.6),
+        inset 0 -20px 16px rgba(0, 0, 0, 0.6),
+        inset 2px 20px 18px rgba(0, 0, 0, 0.6),
+        inset -2px 18px 18px rgba(0, 0, 0, 0.6);
 }
 
 .contentBlockLeft {
@@ -177,6 +177,29 @@
         box-shadow: none;
         overflow: visible;
     }
+        .homepageContent {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+            justify-content: center;
+            align-items: flex-start;
+            margin-top: 1rem;
+            padding: 1rem;
+            width: 100%;
+        }
+    
+        .contentBox {
+            flex: 1;
+            min-width: 300px;
+            max-width: calc(50% - 1rem);
+            margin-bottom: 2rem;
+        }
+    
+        @media (max-width: 768px) {
+            .contentBox {
+                max-width: 100%;
+            }
+        }
 
     .frame {
         position: static;

@@ -1,7 +1,7 @@
 .layoutContainer {
     min-height: 100vh;
     background-color: #121212;
-    color: #ffffff;
+    color: #ff8c42;
     display: flex;
     flex-direction: column;
 }
@@ -11,38 +11,32 @@
     padding: 20px;
     position: relative;
     z-index: 1;
-}
-.mainContent {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
 }
 
-.header {
-    width: 100%;
-    position: sticky;
-    top: 0;
-    z-index: 10;
-    background: var(--background-color, #ffffff);
-}
+
 
 .main {
-    flex: 1;
-    width: 100%;
-    max-width: var(--max-width, 1200px);
-    margin: 0 auto;
-    padding: 2rem 1rem;
+    display: flex;
+        flex-direction: column;
+        min-height: calc(100vh - 100px);
+        /* Upravená výška pro správný spacing */
+        width: 100%;
+        max-width: var(--max-width, 1200px);
+        margin: 0 auto;
+        padding: 1rem;
+        position: relative;
+        z-index: 1;
 }
 
-.footer {
-    width: 100%;
-    padding: 2rem 1rem;
-    background: var(--footer-background, #f5f5f5);
-}
-
-/* Media queries pro responzivitu */
 @media (max-width: 768px) {
     .main {
         padding: 1rem;
+    }
+
+    .header {
+        padding: 0.5rem;
     }
 }

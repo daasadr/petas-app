@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import styles from '../../styles/Contact.module.css'
 
 interface ContactFormProps {
   contactFormFields: Array<{
@@ -42,23 +43,29 @@ export default function ContactForm({ contactFormFields }: ContactFormProps) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form onSubmit={handleSubmit} className="space-y-6">
       {contactFormFields.map((field) => (
-        <div key={field.id}className="flex flex-col">
-          <label htmlFor={field.id} className="text-orange-500 mb-1">{field.label}</label>
+        <div key={field.id} className={styles.formGroup}>
+          <label htmlFor={field.id} className={styles.formLabel}>
+            {field.label}
+          </label>
           <input
-           className="bg-gray-800 text-white border border-orange-500 p-2 rounded"
+            className={styles.formInput}
             type={field.type}
             id={field.id}
             name={field.id}
             value={field.type === 'email' ? email : message}
-            onChange={(e) => field.type === 'email' ? setEmail(e.target.value) : setMessage(e.target.value)}
+            onChange={(e) =>
+              field.type === 'email' ? setEmail(e.target.value) : setMessage(e.target.value)
+            }
             required
           />
         </div>
       ))}
-      <button type="submit" className="bg-orange-500 text-black py-2 px-4 rounded hover:bg-orange-600 transition-colors">Odeslat</button>
-      {status && <p className="text-orange-500 mt-4">{status}</p>}
+      <button type="submit" className={styles.submitButton}>
+        Odeslat
+      </button>
+      {status && <p className={styles.statusMessage}>{status}</p>}
     </form>
   )
 }

@@ -1,17 +1,7 @@
 import { getArticlesPage, getArticlePreviews } from '@/sanity/sanity-utils'
-import { Suspense } from 'react'
-import { Metadata } from 'next'
-import { ArticlesList } from './components/ArticlesList'
+import { ArticlesList } from './components/ArticleList'
 import { ArticlesLoading } from './components/ArticlesLoading'
-import styles from '@/styles/Articles.module.css'
-
-export async function generateMetadata(): Promise<Metadata> {
-  const page = await getArticlesPage()
-  return {
-    title: page.seo?.metaTitle || page.title,
-    description: page.seo?.metaDescription || page.description
-  }
-}
+import styles from '@/styles/Grid.module.css'
 
 export default async function Articles() {
   const page = await getArticlesPage()
@@ -20,17 +10,15 @@ export default async function Articles() {
     : await getArticlePreviews()
 
   return (
-    <div className={styles.articlesGrid}>
+    <div className={styles.pageGrid}>
       <header className={styles.pageHeader}>
         <h1>{page.title}</h1>
         {page.description && (
           <p className={styles.pageDescription}>{page.description}</p>
         )}
       </header>
-
-      <Suspense fallback={<ArticlesLoading />}>
-        <ArticlesList articles={articles} />
-      </Suspense>
+      
+      <ArticlesList articles={articles} />
     </div>
   )
 }

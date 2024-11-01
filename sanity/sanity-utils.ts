@@ -1,6 +1,6 @@
 import imageUrlBuilder from '@sanity/image-url'
 import { createClient, groq } from "next-sanity";
-import { HomePage, Articles,ArticlePage,ArticlePreview, ContactPage, VideoPage, Page, Creations} from "../types/types";
+import { HomePage, Articles,ArticlePage,ArticlePreview, Article, ContactPage, VideoPage, Page, Creations} from "../types/types";
 import { NavItem} from '@/components/types';
 import { config } from './config'
 
@@ -85,9 +85,22 @@ export async function getNavigation() {
   return navigationItems;
 }
 
+function transformToArticle(preview: ArticlePreview): Article {
+  return {
+    _id: preview._id,
+    title: preview.title,
+    slug: preview.slug.current,
+    excerpt: preview.excerpt,
+    ogImage: preview.mainImage?.url
+  }
+}
 
-export async function getArticlesPage(): Promise<Articles> {
-  return client.fetch(
+export async function getArticlesPage(): Promise<{
+  title: string;
+  description?: string;
+  featuredArticles: Article[];
+}> {
+  const result = await client.fetch(
     groq`*[_type == "articles"][0] {
       title,
       description,
@@ -107,10 +120,17 @@ export async function getArticlesPage(): Promise<Articles> {
       seo
     }`
   )
+
+  return {
+    title: result.title,
+    description: result.description,
+    featuredArticles: result.featuredArticles.map(transformToArticle)
+  }
 }
 
-export async function getArticlePreviews(): Promise<ArticlePreview[]> {
-  return client.fetch(
+
+export async function getArticlePreviews(): Promise<Article[]> {
+  const previews = await client.fetch<ArticlePreview[]>(
     groq`*[_type == "articlePage"] | order(publishedAt desc) {
       _id,
       title,
@@ -124,36 +144,12 @@ export async function getArticlePreviews(): Promise<ArticlePreview[]> {
       excerpt
     }`
   )
+  
+  // Transformujeme ArticlePreview na Article pro použití v gridu
+  return previews.map(transformToArticle)
+  
 }
-
-export async function getArticleBySlug(slug: string): Promise<ArticlePage | null> {
-  return client.fetch(
-    groq`*[_type == "articlePage" && slug.current == $slug][0] {
-      _id,
-      title,
-      slug,
-      publishedAt,
-      author,
-      mainImage {
-        asset->{
-          url,
-          alt
-        },
-        caption
-      },
-      content[] {
-        ...,
-        _type == "image" => {
-          "url": asset->url,
-          "alt": asset->alt
-        }
-      },
-      tags,
-      seo
-    }`,
-    { slug }
-  )
-} 
+   
 
 export async function getContactPage(): Promise<ContactPage> {
   return client.fetch(
@@ -247,5 +243,34 @@ export async function getPages(): Promise<{ slug: string }[]> {
     groq`*[_type == "creationPage"] {
       "slug": slug.current
     }`
+  )
+}
+
+export async function getArticleBySlug(slug: string): Promise<ArticlePage | null> {
+  return client.fetch(
+    groq`*[_type == "articlePage" && slug.current == $slug][0] {
+      _type,
+      _id,
+      title,
+      slug,
+      publishedAt,
+      author,
+      mainImage {
+        "url": asset->url,
+        "alt": asset->alt,
+        caption
+      },
+      excerpt,
+      content[] {
+        ...,
+        _type == "image" => {
+          "url": asset->url,
+          "alt": asset->alt
+        }
+      },
+      tags,
+      seo
+    }`,
+    { slug }
   )
 }
